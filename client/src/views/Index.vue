@@ -2,12 +2,6 @@
     <v-app>
         <v-container class="wrapper">
             <div class="main d-flex align-center justify-center">
-                <!-- <div class="d-flex justify-center align-center">
-                    <span>
-                        <img src='../assets/keep.png' alt="" width="100">
-                    </span>
-                    <span class="gkeep ml-5">Google Keep <span class="clone">Clone</span></span>
-                </div> -->
                 <div style="width: 55%" color="info">
                     <v-row>
                         <v-col cols="4" class="text-right"><img src='../assets/keep.png' alt="" width="100"></v-col>
@@ -19,12 +13,12 @@
                     </v-row>
                     
                     <div style="width: 50%" class="ml-auto mr-auto mt-5">
-                        <v-btn block>
+                        <v-btn block to="/login">
                             Login
                         </v-btn>
                     </div>
                     <div style="width: 50%" class="ml-auto mr-auto mt-3">
-                        <v-btn block color="primary">
+                        <v-btn block color="primary" to="/register">
                             Register
                         </v-btn>
                     </div>
@@ -36,11 +30,9 @@
 </template>
 <script>
 export default {
-    data(){
-        return{
+    data: () => ({
 
-        }
-    }
+    })
 }
 </script>
 
