@@ -4,6 +4,7 @@ import Index from '../views/Index.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import NotFoundComponent from '../views/404.vue'
+import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
@@ -26,6 +27,11 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: Home
   }
 ]
 
