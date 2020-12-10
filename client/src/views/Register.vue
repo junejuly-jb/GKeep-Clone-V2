@@ -107,6 +107,7 @@ export default {
                 .catch( err => {
                     console.log(err)
                 })
+                .finally( () => setTimeout (() => { this.$router.push('/login') }, 2000))
             }
         }
     }

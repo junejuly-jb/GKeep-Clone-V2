@@ -33,7 +33,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
 
     const { error } = loginValidation(req.body)
-    if (error) return res.status(400).send(error.details[0].message)
+    if (error) return res.json({ success: false, message: error.details[0].message })
 
     const user = await User.findOne({ email: req.body.email })
     if (!user) return res.status(400).json({ message: 'user not found' })
