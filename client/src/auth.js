@@ -6,13 +6,14 @@ export default function (Vue) {
         },
 
         getToken() { 
+            
             const token = localStorage.getItem('token')
-            const expiration = localStorage.getItem('token')
+            const expiration = localStorage.getItem('expiration')
 
             if (!token || !expiration)
                 return null
             
-            if (Date.now() > parseInt(expiration)) {
+            if (Date.now() >= expiration * 1000) {
                 this.destroyToken()
                 return null
             }

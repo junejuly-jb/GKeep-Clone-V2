@@ -41,7 +41,7 @@ const login = async (req, res) => {
     const validPass = await bcrypt.compare(req.body.password, user.password)
     if (!validPass) return res.json({ success: false, message: 'User not found' })
 
-    const token = jwt.sign({ _id: user._id }, process.env.PASS_PHRASE, { expiresIn: '1h' })
+    const token = jwt.sign({ _id: user._id }, process.env.PASS_PHRASE, { expiresIn: '2h' })
     const exp = jwt.decode(token)
 
     return res.status(200).json({ token: token, exp: exp.exp })
