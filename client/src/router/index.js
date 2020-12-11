@@ -16,22 +16,26 @@ const routes = [
   {
     path: '/',
     name: 'Index',
-    component: Index
+    component: Index,
+    meta: { forVisitors: true }
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: { forVisitors: true }
   },
   {
     path: '/register',
     name: 'Register',
-    component: Register
+    component: Register,
+    meta: { forVisitors: true }
   },
   {
     path: '/home',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: { requireAuth: true }
   }
 ]
 

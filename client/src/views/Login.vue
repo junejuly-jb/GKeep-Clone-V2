@@ -84,6 +84,7 @@ export default {
                 }
                 else{
                     console.log(response)
+                    this.$auth.setToken(response.body.token, response.body.exp + Date.now())
                     this.$router.push('/home')
                 }
             })
