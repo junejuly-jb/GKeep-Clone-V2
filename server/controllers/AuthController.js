@@ -36,14 +36,15 @@ const login = async (req, res) => {
     if (error) return res.json({ success: false, message: error.details[0].message })
 
     const user = await User.findOne({ email: req.body.email })
-    if (!user) return res.status(400).json({ message: 'user not found' })
+    if (!user) return res.json({ success: false, message: 'User not found' })
 
     const validPass = await bcrypt.compare(req.body.password, user.password)
-    if (!validPass) return res.status(400).json({ message: 'invalid password' })
+    if (!validPass) return res.json({ success: false, message: 'User not found' })
 
-    const token = jwt.sign({ _id: user._id }, process.env.PASS_PHRASE, { expiresIn: '1h'})
-    res.header('auth-token', token).json({ token: token })
+    const token = jwt.sign({ _id: user._id }, process.env.PASS_PHRASE, { expiresIn: '1h' })
+    const exp = jwt.decode(token)
 
+    return res.status(200).json({ token: token, exp: exp.exp })
 }
 
 module.exports = {register, login}
