@@ -40,6 +40,9 @@
                 shaped
             >
                 <v-list-item-group
+                v-model="model"
+                mandatory
+                color="orange"
                 >
                 <v-list-item>
                     <v-list-item-title>
@@ -57,7 +60,7 @@
                     </v-list-item-title>
                 </v-list-item>
 
-                <v-list-item @click="labelModal = true">
+                <v-list-item @click="labelDialog = true">
                     <v-list-item-title>
                         <span><v-icon>mdi-pencil-outline</v-icon></span>
                         <span class="ml-5"></span>
@@ -82,14 +85,133 @@
             </v-list>
         </v-navigation-drawer>
         <div class="content-wrapper">
-                
+            <!-- content here -->
         </div>
+
+
+
+        <!-- dialog  end session -->
+
+        <v-dialog
+            v-model="dialog"
+            persistent
+            max-width="350"
+            >
+            <v-card>
+                <v-card-title class="headline">
+                Session Expired
+                </v-card-title>
+                <v-card-text> {{ sesh_err }} </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="logout"
+                >
+                    Okay
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+
+        <!-- label dialog  -->
+        <v-dialog
+            v-model="labelDialog"
+            persistent
+            max-width="350"
+            >
+            <v-card>
+                <v-card-title>
+                Edit Label
+                </v-card-title>
+                <div style="width: 100%; padding: 0% 7% 0% 7%;">
+                    <div class="d-flex justify-center align-center">
+                        <v-text-field prepend-icon="mdi-plus" label="Add label"></v-text-field>
+                        <v-btn fab icon small><v-icon>mdi-check</v-icon></v-btn>
+                    </div>
+                    <div class="d-flex align-center">
+                        <span class="pr-4"><v-icon>mdi-label</v-icon></span>
+                        <span>asd</span>
+                        <div class="ml-auto">
+                            <v-btn small fab icon><v-icon>mdi-trash-can</v-icon></v-btn>
+                            <v-btn small fab icon><v-icon>mdi-pencil</v-icon></v-btn>
+                        </div>
+                    </div>
+                    <div class="d-flex align-center">
+                        <span class="pr-4"><v-icon>mdi-label</v-icon></span>
+                        <span>asd</span>
+                        <div class="ml-auto">
+                            <v-btn small fab icon><v-icon>mdi-trash-can</v-icon></v-btn>
+                            <v-btn small fab icon><v-icon>mdi-pencil</v-icon></v-btn>
+                        </div>
+                    </div>
+                    <div class="d-flex align-center">
+                        <span class="pr-4"><v-icon>mdi-label</v-icon></span>
+                        <span>asd</span>
+                        <div class="ml-auto">
+                            <v-btn small fab icon><v-icon>mdi-trash-can</v-icon></v-btn>
+                            <v-btn small fab icon><v-icon>mdi-pencil</v-icon></v-btn>
+                        </div>
+                    </div>
+                    <div class="d-flex align-center">
+                        <span class="pr-4"><v-icon>mdi-label</v-icon></span>
+                        <span>asd</span>
+                        <div class="ml-auto">
+                            <v-btn small fab icon><v-icon>mdi-trash-can</v-icon></v-btn>
+                            <v-btn small fab icon><v-icon>mdi-pencil</v-icon></v-btn>
+                        </div>
+                    </div>
+                </div>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    @click="labelDialog = false"
+                >
+                    Done
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
     </v-app>
 </template>
 <script>
 export default {
     data: () => ({
-        drawer: false
-    })
+        drawer: true,
+        dialog: false,
+        sesh_err: '',
+        model: 0,
+
+        // labels corner 
+        labelDialog: false
+
+    }),
+
+    methods: {
+        async notes(){
+            await this.$http.get('http://localhost:3000/api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            .then( () => {
+                console.log('hey')
+            })
+            .catch( err => {
+                if(err.status == 401){
+                    this.dialog = true,
+                    this.sesh_err = err.body.message
+                }
+            })
+        },
+        logout(){
+            this.$auth.destroyToken()
+            this.$router.push('/login')
+        }
+    },
+
+    mounted(){
+        this.notes()
+    }
 }
 </script>
