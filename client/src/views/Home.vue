@@ -120,7 +120,7 @@
         <v-dialog
             v-model="labelDialog"
             persistent
-            max-width="350"
+            max-width="400"
             >
             <v-card>
                 <v-card-title>
@@ -131,36 +131,14 @@
                         <v-text-field prepend-icon="mdi-plus" label="Add label"></v-text-field>
                         <v-btn fab icon small><v-icon>mdi-check</v-icon></v-btn>
                     </div>
-                    <div class="d-flex align-center">
+                    <div class="d-flex align-center py-2" v-for="(label, i) in labels" :key="i">
                         <span class="pr-4"><v-icon>mdi-label</v-icon></span>
-                        <span>asd</span>
+                        <v-text-field v-if="labelEditMode === true && editedIndex == i" :value="label"></v-text-field>
+                        <span v-else>{{ label }}</span>
                         <div class="ml-auto">
-                            <v-btn small fab icon><v-icon>mdi-trash-can</v-icon></v-btn>
-                            <v-btn small fab icon><v-icon>mdi-pencil</v-icon></v-btn>
-                        </div>
-                    </div>
-                    <div class="d-flex align-center">
-                        <span class="pr-4"><v-icon>mdi-label</v-icon></span>
-                        <span>asd</span>
-                        <div class="ml-auto">
-                            <v-btn small fab icon><v-icon>mdi-trash-can</v-icon></v-btn>
-                            <v-btn small fab icon><v-icon>mdi-pencil</v-icon></v-btn>
-                        </div>
-                    </div>
-                    <div class="d-flex align-center">
-                        <span class="pr-4"><v-icon>mdi-label</v-icon></span>
-                        <span>asd</span>
-                        <div class="ml-auto">
-                            <v-btn small fab icon><v-icon>mdi-trash-can</v-icon></v-btn>
-                            <v-btn small fab icon><v-icon>mdi-pencil</v-icon></v-btn>
-                        </div>
-                    </div>
-                    <div class="d-flex align-center">
-                        <span class="pr-4"><v-icon>mdi-label</v-icon></span>
-                        <span>asd</span>
-                        <div class="ml-auto">
-                            <v-btn small fab icon><v-icon>mdi-trash-can</v-icon></v-btn>
-                            <v-btn small fab icon><v-icon>mdi-pencil</v-icon></v-btn>
+                            <v-btn small fab icon @click="btnDeleteLabel(label, i)"><v-icon>mdi-trash-can</v-icon></v-btn>
+                            <v-btn v-if="labelEditMode === true && editedIndex == i" small fab icon @click="labelToggler(i)"><v-icon>mdi-check</v-icon></v-btn>
+                            <v-btn v-else small fab icon @click="labelToggler(i)"><v-icon>mdi-pencil</v-icon></v-btn>
                         </div>
                     </div>
                 </div>
@@ -187,7 +165,13 @@ export default {
         model: 0,
 
         // labels corner 
-        labelDialog: false
+        labelDialog: false,
+        labelEditMode: false,
+        editedIndex: -1,
+        labels: [],
+
+        //user
+        userInfo: ''
 
     }),
 
@@ -207,11 +191,36 @@ export default {
         logout(){
             this.$auth.destroyToken()
             this.$router.push('/login')
+        },
+
+        async user(){
+            await this.$http.get('http://localhost:3000/api/userDetails', {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            .then( res => {
+                this.labels = res.body[0].customTags
+            })
+            .catch( err => {
+                console.log(err)
+            })
+        },
+
+
+        btnDeleteLabel(label, i){
+            console.log(label, i)
+            this.labels.splice(i, 1)
+        },
+
+
+        labelToggler(i){
+            this.labelEditMode = !this.labelEditMode
+            this.editedIndex = i
+
         }
+        
     },
 
     mounted(){
         this.notes()
+        this.user()
     }
 }
 </script>
