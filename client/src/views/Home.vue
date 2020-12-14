@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-app-bar app color="white" elevate-on-scroll>
+        <v-app-bar app elevate-on-scroll>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <v-app-bar-nav-icon class="ml-4"><v-icon size="40" color="yellow">mdi-google-keep</v-icon></v-app-bar-nav-icon>
         
@@ -25,6 +25,7 @@
                 bottom
                 left
                 offset-y
+                :close-on-content-click="closeOnContentClick"
             >
                 <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -38,18 +39,24 @@
 
                 <v-list>
                 <v-list-item>
+                        <v-switch
+                        v-model="darkModeSwitch"
+                        @click="onClickToggleDarkMode"
+                        small
+                        inset
+                        :label="`Enable dark mode`"
+                        ></v-switch>
+                </v-list-item>
+
+                <v-list-item>
                     <v-list-item-title>
-                        <span><v-icon>mdi-lightbulb-outline</v-icon></span>
-                        <span class="ml-5"></span>
-                        <span class="col align-items-center">Notes</span>
+                        <span class="col align-items-center">Help</span>
                     </v-list-item-title>
                 </v-list-item>
 
                 <v-list-item>
                     <v-list-item-title>
-                        <span><v-icon>mdi-bell-outline</v-icon></span>
-                        <span class="ml-5"></span>
-                        <span class="col align-items-center">Remindersssssssssssss</span>
+                        <span class="col align-items-center">Send feedback</span>
                     </v-list-item-title>
                 </v-list-item>
                 </v-list>
@@ -212,7 +219,11 @@ export default {
         addLabel: '',
 
         //user
-        userInfo: ''
+        userInfo: '',
+
+        // others
+        darkModeSwitch: false,
+        closeOnContentClick: false
 
     }),
 
@@ -263,6 +274,12 @@ export default {
                 this.labels.push(response.body.tag)
             })
             .catch(err => console.log(err))
+        },
+
+
+        onClickToggleDarkMode(){
+            console.log(this.darkModeSwitch)
+            this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
         }
         
     },
