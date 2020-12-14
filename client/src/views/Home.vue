@@ -20,9 +20,40 @@
                 <v-icon>mdi-view-grid-outline</v-icon>
             </v-btn> -->
 
-            <v-btn icon>
-                <v-icon>mdi-cog</v-icon>
-            </v-btn>
+
+            <v-menu
+                bottom
+                left
+                offset-y
+            >
+                <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    icon
+                    v-bind="attrs"
+                    v-on="on"
+                >
+                    <v-icon>mdi-cog</v-icon>
+                </v-btn>
+                </template>
+
+                <v-list>
+                <v-list-item>
+                    <v-list-item-title>
+                        <span><v-icon>mdi-lightbulb-outline</v-icon></span>
+                        <span class="ml-5"></span>
+                        <span class="col align-items-center">Notes</span>
+                    </v-list-item-title>
+                </v-list-item>
+
+                <v-list-item>
+                    <v-list-item-title>
+                        <span><v-icon>mdi-bell-outline</v-icon></span>
+                        <span class="ml-5"></span>
+                        <span class="col align-items-center">Remindersssssssssssss</span>
+                    </v-list-item-title>
+                </v-list-item>
+                </v-list>
+            </v-menu>
 
             <div class="mx-4"></div>
 
@@ -59,6 +90,15 @@
                         <span class="col align-items-center">Reminders</span>
                     </v-list-item-title>
                 </v-list-item>
+
+                <v-list-item v-for="(label, listIndex) in labels" :key="listIndex">
+                    <v-list-item-title>
+                        <span><v-icon>mdi-label-outline</v-icon></span>
+                        <span class="ml-5"></span>
+                        <span class="col align-items-center">{{label}}</span>
+                    </v-list-item-title>
+                </v-list-item>
+
 
                 <v-list-item @click="labelDialog = true">
                     <v-list-item-title>
@@ -128,8 +168,8 @@
                 </v-card-title>
                 <div style="width: 100%; padding: 0% 7% 0% 7%;">
                     <div class="d-flex justify-center align-center">
-                        <v-text-field prepend-icon="mdi-plus" label="Add label"></v-text-field>
-                        <v-btn fab icon small><v-icon>mdi-check</v-icon></v-btn>
+                        <v-text-field prepend-icon="mdi-plus" label="Add label" v-model="addLabel"></v-text-field>
+                        <v-btn fab icon small @click="onAddLabelClick"><v-icon>mdi-check</v-icon></v-btn>
                     </div>
                     <div class="d-flex align-center py-2" v-for="(label, i) in labels" :key="i">
                         <span class="pr-4"><v-icon>mdi-label</v-icon></span>
@@ -169,6 +209,7 @@ export default {
         labelEditMode: false,
         editedIndex: -1,
         labels: [],
+        addLabel: '',
 
         //user
         userInfo: ''
@@ -213,7 +254,15 @@ export default {
         labelToggler(i){
             this.labelEditMode = !this.labelEditMode
             this.editedIndex = i
+        },
 
+
+        async onAddLabelClick(){
+            await this.$http.post('http://localhost:3000/api/addCustomTag', { tag: this.addLabel }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            .then( response => {
+                this.labels.push(response.body.tag)
+            })
+            .catch(err => console.log(err))
         }
         
     },
