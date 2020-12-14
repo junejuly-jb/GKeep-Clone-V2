@@ -137,12 +137,15 @@
             <v-container>
                 <masonry
                     :cols="4"
+                    v-show="myNotes.length != 0"
                     >
                     <div v-for="(note, index) in myNotes" :key="index">
                         <div><h5>{{ note.title }}</h5></div>
                         <div>{{ note.content }}</div>
                     </div>
                 </masonry>
+
+                <div v-show="myNotes.length < 1" class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
             </v-container>
         </div>
 
@@ -291,16 +294,48 @@ export default {
         },
 
 
-        onClickToggleDarkMode(){
-            console.log(this.darkModeSwitch)
+        async onClickToggleDarkMode(){
+            // console.log(this.darkModeSwitch)
             this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+
+            await this.$http.post('http://localhost:3000/api/darkModeToggler', { val: this.darkModeSwitch }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            .then( res => {
+                console.log(res.body.option)
+                localStorage.removeItem('user-options')
+                localStorage.setItem('user-options', JSON.stringify(res.body.option))
+            })
+            .catch( err => console.log(err))
+            .finally( () => {
+                this.checkUserSetting()        
+            })
+        },
+
+
+        checkUserSetting(){
+            const userOptions = JSON.parse(localStorage.getItem('user-options'))
+            // console.log(userOptions.darkmode)
+            if(userOptions.darkmode == true){
+                this.$vuetify.theme.dark = true
+                this.darkModeSwitch = true
+            }
+            else{
+                this.$vuetify.theme.dark = false
+            }
         }
-        
     },
 
     mounted(){
         this.notes()
         this.user()
+        this.checkUserSetting()
     }
 }
 </script>
+
+<style scoped>
+    .no_notes{
+        height: 100vh;
+        color: gray;
+        font-size: 45px; 
+    }
+</style>

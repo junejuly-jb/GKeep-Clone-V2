@@ -85,11 +85,9 @@ export default {
                 else{
                     this.$auth.setToken(response.body.token, response.body.exp)
                     this.$router.push('/home')
+                    localStorage.setItem('user-options', JSON.stringify(response.body.user.options))
                 }
             })
-            // .finally( () => {
-
-            // })
         }
     }
 }
