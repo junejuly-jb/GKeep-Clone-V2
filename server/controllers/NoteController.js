@@ -21,10 +21,20 @@ const createNote = (req, res) => {
 
 const myNotes = async (req, res) => { 
 
-    const notes = User.findOne({ _id: req.user })
-    if(!notes.notes) return res.status(200).json({ message: "No notes found"})
+    User.findOne({ _id: req.user })
 
-    return res.status(200).json({ message: 'Notes retrieved', notes: notes.notes })
+        .then(response => {
+
+            if (response.notes.length == 0) return res.status(200).json({ message: 'No notes'})
+            return res.status(200).json(response.notes)
+
+        })
+
+        .catch(err => {
+
+            return res.status(400).send(err)
+
+        })
 }
 
 const noteDetails = async (req, res) => { 

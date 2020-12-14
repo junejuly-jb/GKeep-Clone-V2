@@ -4,9 +4,11 @@ import router from './router'
 import vuetify from './plugins/vuetify';
 import VueResource from 'vue-resource'
 import Auth from './auth'
+import VueMasonry from 'vue-masonry-css'
 
 Vue.config.productionTip = false
 Vue.use(VueResource)
+Vue.use(VueMasonry)
 Vue.use(Auth)
 
 router.beforeEach((to, from, next) => {
