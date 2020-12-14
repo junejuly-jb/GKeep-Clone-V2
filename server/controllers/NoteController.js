@@ -19,22 +19,12 @@ const createNote = (req, res) => {
 }
 
 
-const myNotes = (req, res) => { 
+const myNotes = async (req, res) => { 
 
-    User.findOne({ _id: req.user })
-        
-    .then(response => { 
+    const notes = User.findOne({ _id: req.user })
+    if(!notes.notes) return res.status(200).json({ message: "No notes found"})
 
-        return res.status(200).json(response.notes)
-
-    })
-
-    .catch(err => {
-
-        return res.status(400).send(err)
-
-    })
-
+    return res.status(200).json({ message: 'Notes retrieved', notes: notes.notes })
 }
 
 const noteDetails = async (req, res) => { 
@@ -86,10 +76,9 @@ const addCustomTag = async (req, res) => {
         .then(record => {
             record.customTags.push(req.body.tag)
             record.save()
-            return res.status(200).json({ message: 'tag added!' })
-                
-        .catch(err => { return res.send(err)})
-    })
+            return res.status(200).json({ message: 'tag added!', tag: req.body.tag })
+        })
+        .catch(err => { return res.send(err) })
 
 }
 
