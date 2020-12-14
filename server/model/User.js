@@ -27,6 +27,17 @@ const noteSchema = new mongoose.Schema({
 
 })
 
+// const optionsSchema = new mongoose.Schema({
+//     darkMode: {
+//         type: Boolean,
+//         default: false
+//     },
+//     listView: {
+//         type: Boolean,
+//         default: false
+//     }
+// })
+
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -48,6 +59,10 @@ const userSchema = new mongoose.Schema({
         min: 6
     },
     notes: [noteSchema],
+    options: {
+        darkmode: { type: Boolean, default: false },
+        listView: { type: Boolean, default: false },
+    },
     customTags: [],
     date: {
         type: Date,

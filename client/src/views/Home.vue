@@ -1,6 +1,7 @@
 <template>
     <v-app>
-        <v-app-bar app elevate-on-scroll>
+        <v-card tile outlined>
+        <v-toolbar flat>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <v-app-bar-nav-icon class="ml-4"><v-icon size="40" color="yellow">mdi-google-keep</v-icon></v-app-bar-nav-icon>
         
@@ -70,7 +71,8 @@
                     alt="John"
                 >
             </v-avatar>
-        </v-app-bar >
+        </v-toolbar>
+        </v-card>
         <v-navigation-drawer v-model="drawer" app>
            <v-list
                 nav
@@ -132,7 +134,16 @@
             </v-list>
         </v-navigation-drawer>
         <div class="content-wrapper">
-            <!-- content here -->
+            <v-container>
+                <masonry
+                    :cols="4"
+                    >
+                    <div v-for="(note, index) in myNotes" :key="index">
+                        <div><h5>{{ note.title }}</h5></div>
+                        <div>{{ note.content }}</div>
+                    </div>
+                </masonry>
+            </v-container>
         </div>
 
 
@@ -210,6 +221,7 @@ export default {
         dialog: false,
         sesh_err: '',
         model: 0,
+        
 
         // labels corner 
         labelDialog: false,
@@ -217,6 +229,7 @@ export default {
         editedIndex: -1,
         labels: [],
         addLabel: '',
+        myNotes: [],
 
         //user
         userInfo: '',
@@ -230,8 +243,9 @@ export default {
     methods: {
         async notes(){
             await this.$http.get('http://localhost:3000/api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
-            .then( () => {
-                console.log('hey')
+            .then( (response) => {
+                console.log(response.body)
+                this.myNotes = response.body
             })
             .catch( err => {
                 if(err.status == 401){
