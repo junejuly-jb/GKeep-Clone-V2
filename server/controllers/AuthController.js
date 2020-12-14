@@ -44,7 +44,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ _id: user._id }, process.env.PASS_PHRASE, { expiresIn: '1h' })
     const exp = jwt.decode(token)
 
-    return res.status(200).json({ token: token, exp: exp.exp })
+    return res.status(200).json({ token: token, exp: exp.exp, user })
 }
 
 module.exports = {register, login}
