@@ -113,8 +113,19 @@ const setUnsetArchiveStatus = async (req, res) => {
 
 }
 
+
+const deleteLabel = async (req, res) => {
+
+    await User.updateOne({ _id: req.user }, { $pullAll: { customTags: [req.body.tag] } }, (err, doc) => {
+        if (err) return res.status(400).json(err)
+        return res.status(200).json(doc)
+    })
+
+}
+
+
 module.exports = {
     createNote, myNotes, noteDetails, deleteNote,
     updateNote, bulkDeleteNote, addCustomTag,
-    setUnsetArchiveStatus
+    setUnsetArchiveStatus, deleteLabel
 }

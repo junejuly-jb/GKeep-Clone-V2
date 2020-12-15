@@ -82,7 +82,7 @@
                 <v-list-item-group
                 v-model="model"
                 mandatory
-                color="orange"
+                color="amber"
                 >
                 <v-list-item>
                     <v-list-item-title>
@@ -291,11 +291,11 @@ export default {
                 this.labels.push(response.body.tag)
             })
             .catch(err => console.log(err))
+            .finally(() => { this.addLabel = ''})
         },
 
 
         async onClickToggleDarkMode(){
-            // console.log(this.darkModeSwitch)
             this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
 
             await this.$http.post('http://localhost:3000/api/darkModeToggler', { val: this.darkModeSwitch }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
