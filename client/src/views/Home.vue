@@ -102,7 +102,7 @@
 
                     <v-list-item>
                         <v-list-item-title>
-                            <span class="col align-items-center">Logout</span>
+                            <v-btn text block color="red" @click="logout">Logout</v-btn>
                         </v-list-item-title>
                     </v-list-item>
                 </v-list>
@@ -179,8 +179,22 @@
                         <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
                             <v-card outlined>
                                 <v-container>
-                                    <div class="py-3"><h3>{{ note.title }}</h3></div>
-                                    <div>{{ note.content }}</div>
+                                    <div class="float-right">
+                                        <v-icon small>mdi-circle-outline</v-icon>
+                                    </div>
+                                    <div class="py-2"><h5>{{ note.title }}</h5></div>
+                                    <p>{{ note.content }}</p>
+                                    <div class="d-flex">
+                                        <div>
+                                            <v-btn fab icon x-small><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                        </div>
+                                        <div>
+                                            <v-btn fab icon x-small><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                        </div>
+                                        <div>
+                                            <v-btn fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                        </div>
+                                    </div>
                                 </v-container>
                             </v-card>
                         </div>
@@ -362,7 +376,7 @@ export default {
             else{
                 this.$vuetify.theme.dark = false
             }
-        }
+        },
     },
 
     mounted(){
