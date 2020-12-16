@@ -12,6 +12,12 @@
             <v-btn icon>
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
+            <v-btn icon v-show="!listView" @click="listView = true">
+                <v-icon>mdi-view-agenda-outline</v-icon>
+            </v-btn>
+            <v-btn icon v-show="listView" @click="listView = false">
+                <v-icon>mdi-view-grid-outline</v-icon>
+            </v-btn>
 
             <!-- <v-btn icon @click="gridView = false" v-show="gridView">
                 <v-icon>mdi-view-agenda-outline</v-icon>
@@ -34,7 +40,7 @@
                     v-bind="attrs"
                     v-on="on"
                 >
-                    <v-icon>mdi-cog</v-icon>
+                    <v-icon>mdi-cog-outline</v-icon>
                 </v-btn>
                 </template>
 
@@ -170,7 +176,7 @@
             </v-list>
         </v-navigation-drawer>
         <div class="content-wrapper">
-            <div style="padding: 0px 7%">
+            <div style="padding: 0px 7%" v-show="!listView">
                 <masonry
                     :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
                     :gutter="{default: '30px', 700: '10px'}"
@@ -201,6 +207,33 @@
                 </masonry>
 
                 <div v-else class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
+            </div>
+
+
+            <!-- FOR LIST VIEW  -->
+            <div style="padding: 0px 7%" v-show="listView">
+                <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
+                    <v-card outlined>
+                        <v-container>
+                            <div class="float-right">
+                                <v-icon small>mdi-circle-outline</v-icon>
+                            </div>
+                            <div class="py-2"><h5>{{ note.title }}</h5></div>
+                            <p>{{ note.content }}</p>
+                            <div class="d-flex">
+                                <div>
+                                    <v-btn fab icon x-small><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                </div>
+                                <div>
+                                    <v-btn fab icon x-small><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                </div>
+                                <div>
+                                    <v-btn fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                </div>
+                            </div>
+                        </v-container>
+                    </v-card>
+                </div>
             </div>
         </div>
 
@@ -294,7 +327,10 @@ export default {
 
         // others
         darkModeSwitch: false,
-        closeOnContentClick: false
+        closeOnContentClick: false,
+
+        // view
+        listView: false,
 
     }),
 
