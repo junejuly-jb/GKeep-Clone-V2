@@ -134,19 +134,24 @@
             </v-list>
         </v-navigation-drawer>
         <div class="content-wrapper">
-            <v-container>
+            <div style="padding: 0px 10%">
                 <masonry
                     :cols="4"
-                    v-show="myNotes.length != 0"
+                    :gutter="30"
+                    v-if="myNotes.length != 0"
                     >
-                    <div v-for="(note, index) in myNotes" :key="index">
-                        <div><h5>{{ note.title }}</h5></div>
-                        <div>{{ note.content }}</div>
-                    </div>
+                        <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
+                            <v-card outlined>
+                                <v-container>
+                                    <div class="py-3"><h3>{{ note.title }}</h3></div>
+                                    <div>{{ note.content }}</div>
+                                </v-container>
+                            </v-card>
+                        </div>
                 </masonry>
 
-                <div v-show="myNotes.length < 1" class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
-            </v-container>
+                <div v-else class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
+            </div>
         </div>
 
 
