@@ -63,14 +63,50 @@
                 </v-list>
             </v-menu>
 
-            <div class="mx-4"></div>
 
-            <v-avatar size="40">
+            <!-- <v-avatar size="40">
                 <img
                     src="https://scontent.fmnl4-2.fna.fbcdn.net/v/t1.0-9/85221965_2668856169818185_7998544657929732096_o.jpg?_nc_cat=105&ccb=2&_nc_sid=09cbfe&_nc_eui2=AeE2aG4AH9FGMjNSuAy72r6jti0gOcBuDYa2LSA5wG4NhvB4hWUk64SfGWBxf395em1R33GJUPFfVceVcUWofsMK&_nc_ohc=35Ux5yVpzaEAX9wV7_I&_nc_ht=scontent.fmnl4-2.fna&oh=3c337a759c9e64941c0d4289b8e1a834&oe=5FD6F7CE"
                     alt="John"
                 >
-            </v-avatar>
+            </v-avatar> -->
+
+            <v-menu
+                bottom
+                left
+                offset-y
+                :close-on-content-click="closeOnContentClick"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    icon
+                    v-bind="attrs"
+                    v-on="on"
+                >
+                    <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+                </template>
+
+                <v-list>
+                    <v-list-item>
+                            <div>
+                                <v-avatar>JB</v-avatar>
+                            </div>
+                    </v-list-item>
+
+                    <v-list-item>
+                        <v-list-item-title>
+                            <span class="col align-items-center">Edit Profile</span>
+                        </v-list-item-title>
+                    </v-list-item>
+
+                    <v-list-item>
+                        <v-list-item-title>
+                            <span class="col align-items-center">Logout</span>
+                        </v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </v-toolbar>
         </v-card>
         <v-navigation-drawer v-model="drawer" app>
@@ -134,10 +170,10 @@
             </v-list>
         </v-navigation-drawer>
         <div class="content-wrapper">
-            <div style="padding: 0px 10%">
+            <div style="padding: 0px 7%">
                 <masonry
-                    :cols="4"
-                    :gutter="30"
+                    :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
+                    :gutter="{default: '30px', 700: '10px'}"
                     v-if="myNotes.length != 0"
                     >
                         <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
