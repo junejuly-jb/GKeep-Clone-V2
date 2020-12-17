@@ -181,7 +181,37 @@
             </v-list>
         </v-navigation-drawer>
         <div class="content-wrapper">
-
+            <div class="pt-5">
+                <v-card transition="slide-x-transition" v-show="!typingMode" max-width="550" style="margin: auto;" class="mb-5 rounded-lg">
+                    <v-container>
+                        <div @click="typingMode = true">Take a note . . .</div>
+                    </v-container>
+                </v-card>
+                <v-card transition="slide-x-transition" v-show="typingMode" max-width="550" style="margin: auto;" class="mb-5 rounded-lg">
+                        <v-container>
+                            <div class="pb-4 px-3">
+                                <!-- <input type="text" placeholder="Title" class="search" v-model="form.title"> -->
+                                <v-text-field
+                                    label="Title"
+                                ></v-text-field>
+                            </div>
+                            <div class="px-3">
+                                <!-- <textarea class="search" placeholder="Take a note . . ." rows="4" v-model="form.content"></textarea> -->
+                                <v-textarea
+                                    label="Take a note..."
+                                ></v-textarea>
+                            </div>
+                        </v-container>
+                        <v-container>
+                            <v-card-actions>
+                                <v-btn icon><v-icon>mdi-plus</v-icon></v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn text @click="typingMode = false">Close</v-btn>
+                                <v-btn text color="blue darken-1" @click="btnAddNote">Save</v-btn>
+                            </v-card-actions>
+                        </v-container>
+                    </v-card>
+                </div>
             <!-- FOR GRID VIEW  -->
 
             <div style="padding: 0px 7%" v-show="!listView">
@@ -375,6 +405,8 @@ export default {
         model: 0,
         snackbar: false,   
         msg: '',
+        typingMode: false, 
+        form: {},
 
         // labels corner 
         labelDialog: false,
