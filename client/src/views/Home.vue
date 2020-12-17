@@ -8,16 +8,31 @@
             <v-toolbar-title class="ml-3 mr-5">Google Keep CLONE</v-toolbar-title>
 
             <v-spacer></v-spacer>
-
-            <v-btn icon>
-                <v-icon>mdi-refresh</v-icon>
-            </v-btn>
-            <v-btn icon v-show="!listView" @click="listView = true">
-                <v-icon>mdi-view-agenda-outline</v-icon>
-            </v-btn>
-            <v-btn icon v-show="listView" @click="listView = false">
-                <v-icon>mdi-view-grid-outline</v-icon>
-            </v-btn>
+            
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn v-bind="attrs" v-on="on" icon>
+                        <v-icon>mdi-refresh</v-icon>
+                    </v-btn>
+                </template>
+                <span>Refresh</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn v-bind="attrs" v-on="on" icon v-show="!listView" @click="listView = true">
+                        <v-icon>mdi-view-agenda-outline</v-icon>
+                    </v-btn>
+                </template>
+                <span>List View</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn v-bind="attrs" v-on="on" icon v-show="listView" @click="listView = false">
+                        <v-icon>mdi-view-grid-outline</v-icon>
+                    </v-btn>
+                </template>
+                <span>Grid View</span>
+            </v-tooltip>
 
             <!-- <v-btn icon @click="gridView = false" v-show="gridView">
                 <v-icon>mdi-view-agenda-outline</v-icon>
@@ -204,10 +219,16 @@
                         </v-container>
                         <v-container>
                             <v-card-actions>
-                                <v-btn icon><v-icon>mdi-plus</v-icon></v-btn>
+                                <v-tooltip bottom>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn icon v-bind="attrs" v-on="on"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                    </template>
+                                     <span>Add tag</span>
+                                </v-tooltip>
+
                                 <v-spacer></v-spacer>
                                 <v-btn text @click="typingMode = false">Close</v-btn>
-                                <v-btn text color="blue darken-1" @click="btnAddNote">Save</v-btn>
+                                <v-btn text color="blue darken-1">Save</v-btn>
                             </v-card-actions>
                         </v-container>
                     </v-card>
@@ -230,16 +251,36 @@
                                     <p>{{ note.content }}</p>
                                     <div class="d-flex">
                                         <div>
-                                            <v-btn fab icon x-small><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn x-small fab icon v-bind="attrs" v-on="on"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                                </template>
+                                                <span>Add tag</span>
+                                            </v-tooltip>
                                         </div>
                                         <div>
-                                            <v-btn fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                                </template>
+                                                <span>Delete</span>
+                                            </v-tooltip>
                                         </div>
                                         <div>
-                                            <v-btn fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                                </template>
+                                                <span>Edit</span>
+                                            </v-tooltip>
                                         </div>
                                         <div>
-                                            <v-btn fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                                </template>
+                                                <span>Archive</span>
+                                            </v-tooltip>
                                         </div>
                                     </div>
                                 </v-container>
