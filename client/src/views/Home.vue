@@ -203,10 +203,13 @@
                                             <v-btn fab icon x-small><v-icon>mdi-tag-outline</v-icon></v-btn>
                                         </div>
                                         <div>
-                                            <v-btn fab icon x-small><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                            <v-btn fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                                         </div>
                                         <div>
                                             <v-btn fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                        </div>
+                                        <div>
+                                            <v-btn fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
                                         </div>
                                     </div>
                                 </v-container>
@@ -310,7 +313,57 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        
 
+        <!-- confirm delete dialog  -->
+
+        <v-dialog
+            v-model="confirmDeleteDialog"
+            persistent
+            max-width="350"
+            >
+            <v-card>
+                <v-card-title class="headline">
+                Delete this note?
+                </v-card-title>
+                <v-card-text>Deleted note will on trash for 20 days.</v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    @click="dialog = false"
+                >
+                    Close
+                </v-btn>
+                <v-btn
+                    color="red darken-1"
+                    text
+                    @click="btnConfirmSingleDelete"
+                >
+                    Okay
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+            </v-dialog>
+
+
+            <!-- snack bar  -->
+            <v-snackbar
+            v-model="snackbar"
+            >
+            {{ msg }}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                color="pink"
+                text
+                v-bind="attrs"
+                @click="snackbar = false"
+                >
+                Close
+                </v-btn>
+            </template>
+            </v-snackbar>
     </v-app>
 </template>
 <script>
@@ -320,7 +373,8 @@ export default {
         dialog: false,
         sesh_err: '',
         model: 0,
-        
+        snackbar: false,   
+        msg: '',
 
         // labels corner 
         labelDialog: false,
@@ -340,13 +394,18 @@ export default {
         // view
         listView: false,
 
+        //notes
+        delSelectedNoteIndex: -1,
+        delSelectedNoteId: null,
+        confirmDeleteDialog: false
+
+
     }),
 
     methods: {
         async notes(){
             await this.$http.get('http://localhost:3000/api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( (response) => {
-                console.log(response.body)
                 this.myNotes = response.body
             })
             .catch( err => {
@@ -421,6 +480,35 @@ export default {
                 this.$vuetify.theme.dark = false
             }
         },
+
+
+        deleteSingleNote(note, index){
+            // console.log(note, index)
+            this.delSelectedNoteIndex = index
+            this.delSelectedNoteId = note._id
+            this.confirmDeleteDialog = true
+        },
+
+
+        async btnConfirmSingleDelete(){
+            await this.$http.post('http://localhost:3000/api/deleteNote', { note_id: this.delSelectedNoteId },
+            {
+                headers:{
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then(( res ) => {
+                console.log(res.body)
+                this.snackbar = true
+                this.msg = res.body
+            })
+            .catch( err => {console.log(err)})
+            .finally(() => {
+                this.delSelectedNoteId = null
+                this.confirmDeleteDialog = false
+                this.myNotes.splice(this.delSelectedNoteIndex, 1)
+            })
+        }
     },
 
     mounted(){

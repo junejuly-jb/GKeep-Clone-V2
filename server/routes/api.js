@@ -18,7 +18,7 @@ router.post('/setUnsetArchiveStatus/:id', authenticate, NoteController.setUnsetA
 router.post('/darkModeToggler', authenticate, UserController.darkModeToggler)
 router.post('/deleteLabel', authenticate, NoteController.deleteLabel)
 
-router.put('/notes/:id', authenticate, NoteController.deleteNote)
+router.post('/deleteNote', authenticate, NoteController.deleteNote)
 router.put('/updateNote/:id', authenticate, NoteController.updateNote)
 
 
