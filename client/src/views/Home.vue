@@ -54,7 +54,11 @@
                         :label="`Enable dark mode`"
                         ></v-switch>
                 </v-list-item>
-
+                <v-list-item>
+                    <v-list-item-title>
+                        <span class="col align-items-center">Edit Profile</span>
+                    </v-list-item-title>
+                </v-list-item>
                 <v-list-item>
                     <v-list-item-title>
                         <span class="col align-items-center">Help</span>
@@ -95,15 +99,16 @@
 
                 <v-list>
                     <v-list-item>
-                            <div>
-                                <v-avatar>JB</v-avatar>
-                            </div>
-                    </v-list-item>
-
-                    <v-list-item>
-                        <v-list-item-title>
-                            <span class="col align-items-center">Edit Profile</span>
-                        </v-list-item-title>
+                        <div class="py-5 px-5 text-center">
+                            <v-avatar
+                            color="primary"
+                            size="63"
+                            ><span class="white--text headline">JBA</span></v-avatar>
+                            <h3>June Aragoncillo</h3>
+                            <p class="caption mt-1">
+                                june@gmail.com
+                            </p>
+                        </div>
                     </v-list-item>
 
                     <v-list-item>
@@ -176,6 +181,9 @@
             </v-list>
         </v-navigation-drawer>
         <div class="content-wrapper">
+
+            <!-- FOR GRID VIEW  -->
+
             <div style="padding: 0px 7%" v-show="!listView">
                 <masonry
                     :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
