@@ -162,7 +162,7 @@
                     </v-list-item-title>
                 </v-list-item>
 
-                <v-list-item v-for="(label, listIndex) in labels" :key="listIndex">
+                <v-list-item v-for="(label, listIndex) in labels" :key="listIndex" @click="onClickFilter(label)">
                     <v-list-item-title>
                         <span><v-icon>mdi-label-outline</v-icon></span>
                         <span class="ml-5"></span>
@@ -631,6 +631,16 @@ export default {
             })
             .then( res => { console.log(res)})
             .catch( err => {console.log(err)})
+        },
+
+
+        onClickFilter(label){
+            console.log(label)
+            let filteredNotes = this.myNotes.filter( notes => {
+                return (notes.tags.indexOf(label) >= 0)
+            })
+
+            this.myNotes = filteredNotes
         }
     },
 
