@@ -6,6 +6,7 @@ const createNote = (req, res) => {
     const newNote = {
         title: req.body.title,
         content: req.body.content,
+        tags: req.body.tags
     }
 
     User.findOne({ _id: req.user._id })

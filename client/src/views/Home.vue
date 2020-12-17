@@ -197,38 +197,50 @@
         </v-navigation-drawer>
         <div class="content-wrapper">
             <div class="pt-5">
-                <v-card transition="slide-x-transition" v-show="!typingMode" max-width="550" style="margin: auto;" class="mb-5 rounded-lg">
+                <v-card transition="slide-x-transition" v-show="!typingMode" max-width="650" style="margin: auto;" class="mb-5 rounded-lg">
                     <v-container>
                         <div @click="typingMode = true">Take a note . . .</div>
                     </v-container>
                 </v-card>
-                <v-card transition="slide-x-transition" v-show="typingMode" max-width="550" style="margin: auto;" class="mb-5 rounded-lg">
+                <v-card transition="slide-x-transition" v-show="typingMode" max-width="650" style="margin: auto;" class="mb-5 rounded-lg">
                         <v-container>
                             <div class="pb-4 px-3">
                                 <!-- <input type="text" placeholder="Title" class="search" v-model="form.title"> -->
                                 <v-text-field
                                     label="Title"
+                                    v-model="newNote.title"
                                 ></v-text-field>
                             </div>
                             <div class="px-3">
                                 <!-- <textarea class="search" placeholder="Take a note . . ." rows="4" v-model="form.content"></textarea> -->
                                 <v-textarea
                                     label="Take a note..."
+                                    v-model="newNote.content"
                                 ></v-textarea>
                             </div>
                         </v-container>
                         <v-container>
                             <v-card-actions>
-                                <v-tooltip bottom>
+                                <!-- <v-tooltip bottom>
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-btn icon v-bind="attrs" v-on="on"><v-icon>mdi-tag-outline</v-icon></v-btn>
                                     </template>
                                      <span>Add tag</span>
-                                </v-tooltip>
+                                </v-tooltip> -->
+
+                                <v-select
+                                    prepend-icon="mdi-tag-outline"
+                                    v-model="newNote.tags"
+                                    :items="c_tag"
+                                    chips
+                                    label="Add label"
+                                    multiple
+                                    solo
+                                ></v-select>
 
                                 <v-spacer></v-spacer>
                                 <v-btn text @click="typingMode = false">Close</v-btn>
-                                <v-btn text color="blue darken-1">Save</v-btn>
+                                <v-btn text color="blue darken-1" @click="btnAddNote">Save</v-btn>
                             </v-card-actions>
                         </v-container>
                     </v-card>
@@ -249,6 +261,16 @@
                                     </div>
                                     <div class="py-2"><h5>{{ note.title }}</h5></div>
                                     <p>{{ note.content }}</p>
+                                    <div class="mt-3 mb-4">
+                                        <v-chip
+                                        class="mr-1"
+                                        outlined
+                                        v-for="(noteTags, i) in note.tags"
+                                        :key="i" small
+                                        >
+                                        {{noteTags}}
+                                        </v-chip>
+                                    </div>
                                     <div class="d-flex">
                                         <div>
                                             <v-tooltip bottom>
@@ -302,6 +324,16 @@
                             </div>
                             <div class="py-2"><h5>{{ note.title }}</h5></div>
                             <p>{{ note.content }}</p>
+                            <div class="mt-3 mb-4">
+                                <v-chip
+                                class="mr-1 mb-1"
+                                outlined
+                                v-for="(noteTags, i) in note.tags"
+                                :key="i" small
+                                >
+                                {{noteTags}}
+                                </v-chip>
+                            </div>
                             <div class="d-flex">
                                 <div>
                                     <v-btn fab icon x-small><v-icon>mdi-tag-outline</v-icon></v-btn>
@@ -470,8 +502,13 @@ export default {
         //notes
         delSelectedNoteIndex: -1,
         delSelectedNoteId: null,
-        confirmDeleteDialog: false
-
+        confirmDeleteDialog: false,
+        newNote: {
+            title: '',
+            content: '',
+            tags: []
+        },
+        c_tag: []
 
     }),
 
@@ -497,6 +534,7 @@ export default {
             await this.$http.get('http://localhost:3000/api/userDetails', {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( res => {
                 this.labels = res.body[0].customTags
+                this.c_tag = res.body[0].customTags
             })
             .catch( err => {
                 console.log(err)
@@ -581,6 +619,18 @@ export default {
                 this.confirmDeleteDialog = false
                 this.myNotes.splice(this.delSelectedNoteIndex, 1)
             })
+        },
+
+
+        async btnAddNote(){
+            await this.$http.post('http://localhost:3000/api/createNote', this.newNote,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then( res => { console.log(res)})
+            .catch( err => {console.log(err)})
         }
     },
 
