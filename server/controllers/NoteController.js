@@ -47,9 +47,9 @@ const noteDetails = async (req, res) => {
 
 const deleteNote = async (req, res) =>
     {
-        await User.update({ _id: req.user }, { $pull: { "notes": { _id: req.params.id } } }, {multi: true})
-            .then(() => { return res.status(200).send('Success') })
-            .catch(err => { return res.status(500).send('error deleting note') })
+    await User.updateOne({ _id: req.user }, { $pull: { "notes": { _id: req.body.note_id } } }, {multi: true})
+            .then(() => { return res.status(200).json('Success') })
+            .catch(err => { return res.status(500).json('error deleting note') })
     }
 
 
