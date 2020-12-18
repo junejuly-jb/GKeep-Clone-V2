@@ -26,7 +26,6 @@ const myNotes = async (req, res) => {
 
         .then(response => {
 
-            if (response.notes.length == 0) return res.status(200).json({ message: 'No notes'})
             return res.status(200).json(response.notes)
 
         })

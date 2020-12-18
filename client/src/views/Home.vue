@@ -250,7 +250,6 @@
                 <masonry
                     :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
                     :gutter="{default: '30px', 700: '10px'}"
-                    v-if="myNotes.length != 0"
                     >
                         <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
                             <v-card outlined>
@@ -308,8 +307,6 @@
                             </v-card>
                         </div>
                 </masonry>
-
-                <div v-else class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
             </div>
 
             <!-- FOR GRID VIEW (FILTERING) -->
@@ -318,7 +315,6 @@
                 <masonry
                     :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
                     :gutter="{default: '30px', 700: '10px'}"
-                    v-if="myNotes.length != 0"
                     >
                         <div v-for="(note, index) in filteredNotes" :key="index" class="mt-5">
                             <v-card outlined>
@@ -376,8 +372,6 @@
                             </v-card>
                         </div>
                 </masonry>
-
-                <div v-else class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
             </div>
 
 
@@ -618,7 +612,6 @@ export default {
         filteredNotes: [],
         filtering: false
     }),
-
     methods: {
         async notes(){
             await this.$http.get('http://localhost:3000/api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
