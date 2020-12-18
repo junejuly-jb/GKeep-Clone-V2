@@ -448,6 +448,8 @@
                     </v-card>
                 </div>
             </div>
+            <div v-if="myNotes.length == 0" class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
+
         </div>
 
 
@@ -669,7 +671,6 @@ export default {
 
             await this.$http.post('http://localhost:3000/api/darkModeToggler', { val: this.darkModeSwitch }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( res => {
-                console.log(res.body.option)
                 localStorage.removeItem('user-options')
                 localStorage.setItem('user-options', JSON.stringify(res.body.option))
             })
@@ -733,9 +734,13 @@ export default {
                 this.myNotes.push(res.body.data)
                 this.snackbar = true
                 this.msg = res.body.message
+                this.typingMode = false
             })
-            .catch( err => {console.log(err)})
-            .finally( () => { this.typingMode = false })
+            .catch( err => {
+                this.snackbar = true
+                this.msg = err.body.message
+            })
+            .finally( () => { this.newNote = {}})
         },
 
 
@@ -745,8 +750,6 @@ export default {
             this.filteredNotes = this.tempNotes.filter( notes => {
                 return (notes.tags.indexOf(label) >= 0)
             })
-            console.log(label)
-
         }
     },
 
@@ -759,9 +762,10 @@ export default {
 </script>
 
 <style scoped>
+
     .no_notes{
-        height: 100vh;
+        height: 70vh;
         color: gray;
-        font-size: 45px; 
+        font-size: 45px;
     }
 </style>
