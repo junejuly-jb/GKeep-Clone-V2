@@ -146,7 +146,7 @@
                 mandatory
                 color="amber"
                 >
-                <v-list-item>
+                <v-list-item @click="filtering = false">
                     <v-list-item-title>
                         <span><v-icon>mdi-lightbulb-outline</v-icon></span>
                         <span class="ml-5"></span>
@@ -245,9 +245,8 @@
                         </v-container>
                     </v-card>
                 </div>
-            <!-- FOR GRID VIEW  -->
-
-            <div style="padding: 0px 7%" v-show="!listView">
+            <!-- FOR GRID VIEW  (NOT FILTERING)-->
+            <div style="padding: 0px 7%" v-show="!listView && !filtering">
                 <masonry
                     :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
                     :gutter="{default: '30px', 700: '10px'}"
@@ -313,10 +312,116 @@
                 <div v-else class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
             </div>
 
+            <!-- FOR GRID VIEW (FILTERING) -->
 
-            <!-- FOR LIST VIEW  -->
-            <div style="padding: 0px 7%" v-show="listView">
+            <div style="padding: 0px 7%" v-show="!listView && filtering">
+                <masonry
+                    :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
+                    :gutter="{default: '30px', 700: '10px'}"
+                    v-if="myNotes.length != 0"
+                    >
+                        <div v-for="(note, index) in filteredNotes" :key="index" class="mt-5">
+                            <v-card outlined>
+                                <v-container>
+                                    <div class="float-right">
+                                        <v-icon small>mdi-circle-outline</v-icon>
+                                    </div>
+                                    <div class="py-2"><h5>{{ note.title }}</h5></div>
+                                    <p>{{ note.content }}</p>
+                                    <div class="mt-3 mb-4">
+                                        <v-chip
+                                        class="mr-1"
+                                        outlined
+                                        v-for="(noteTags, i) in note.tags"
+                                        :key="i" small
+                                        >
+                                        {{noteTags}}
+                                        </v-chip>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn x-small fab icon v-bind="attrs" v-on="on"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                                </template>
+                                                <span>Add tag</span>
+                                            </v-tooltip>
+                                        </div>
+                                        <div>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                                </template>
+                                                <span>Delete</span>
+                                            </v-tooltip>
+                                        </div>
+                                        <div>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                                </template>
+                                                <span>Edit</span>
+                                            </v-tooltip>
+                                        </div>
+                                        <div>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                                </template>
+                                                <span>Archive</span>
+                                            </v-tooltip>
+                                        </div>
+                                    </div>
+                                </v-container>
+                            </v-card>
+                        </div>
+                </masonry>
+
+                <div v-else class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
+            </div>
+
+
+            <!-- FOR LIST VIEW  (NOT FILTERING)-->
+            <div style="padding: 0px 7%" v-show="listView && !filtering">
                 <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
+                    <v-card outlined>
+                        <v-container>
+                            <div class="float-right">
+                                <v-icon small>mdi-circle-outline</v-icon>
+                            </div>
+                            <div class="py-2"><h5>{{ note.title }}</h5></div>
+                            <p>{{ note.content }}</p>
+                            <div class="mt-3 mb-4">
+                                <v-chip
+                                class="mr-1 mb-1"
+                                outlined
+                                v-for="(noteTags, i) in note.tags"
+                                :key="i" small
+                                >
+                                {{noteTags}}
+                                </v-chip>
+                            </div>
+                            <div class="d-flex">
+                                <div>
+                                    <v-btn fab icon x-small><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                </div>
+                                <div>
+                                    <v-btn fab icon x-small><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                </div>
+                                <div>
+                                    <v-btn fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                </div>
+                            </div>
+                        </v-container>
+                    </v-card>
+                </div>
+            </div>
+
+
+
+            <!-- FOR LIST VIEW (FILTERING) -->
+            <div style="padding: 0px 7%" v-show="listView && filtering">
+                <div v-for="(note, index) in filteredNotes" :key="index" class="mt-5">
                     <v-card outlined>
                         <v-container>
                             <div class="float-right">
@@ -508,8 +613,10 @@ export default {
             content: '',
             tags: []
         },
-        c_tag: []
-
+        c_tag: [],
+        tempNotes: [],
+        filteredNotes: [],
+        filtering: false
     }),
 
     methods: {
@@ -629,18 +736,24 @@ export default {
                     Authorization: 'Bearer ' + this.$auth.getToken()
                 }
             })
-            .then( res => { console.log(res)})
+            .then( res => {
+                this.myNotes.push(res.body.data)
+                this.snackbar = true
+                this.msg = res.body.message
+            })
             .catch( err => {console.log(err)})
+            .finally( () => { this.typingMode = false })
         },
 
 
         onClickFilter(label){
-            console.log(label)
-            let filteredNotes = this.myNotes.filter( notes => {
+            this.tempNotes = this.myNotes
+            this.filtering = true
+            this.filteredNotes = this.tempNotes.filter( notes => {
                 return (notes.tags.indexOf(label) >= 0)
             })
+            console.log(label)
 
-            this.myNotes = filteredNotes
         }
     },
 
