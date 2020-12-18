@@ -1,7 +1,10 @@
 const User = require('../model/User')
-
+const { noteValidation } = require('../validation')
 
 const createNote = (req, res) => { 
+
+    const { error } = noteValidation(req.body)
+    if (error) return res.status(400).json({ success: false, message: error.details[0].message })
 
     const newNote = {
         title: req.body.title,

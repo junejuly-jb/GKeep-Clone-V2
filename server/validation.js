@@ -21,7 +21,7 @@ const loginValidation = (data) => {
     const schema = Joi.object({
 
         email: Joi.string().required().email(),
-        password: Joi.required()
+        password: Joi.required(),
 
     })
 
@@ -37,7 +37,7 @@ const noteValidation = (data) => {
         title: Joi.string().required(),
         content: Joi.string().required()
 
-    })
+    }).unknown(true)
 
     return schema.validate(data)
 
