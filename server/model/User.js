@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 
 const noteSchema = new mongoose.Schema({
 
-
     // id: mongoose.Schema.ObjectId,
     title: {
         type: String,
@@ -23,20 +22,10 @@ const noteSchema = new mongoose.Schema({
     archive: {
         type: Boolean,
         default: false
-    }
+    },
+    createdAt: { type: Date, default: Date.now },
 
 })
-
-// const optionsSchema = new mongoose.Schema({
-//     darkMode: {
-//         type: Boolean,
-//         default: false
-//     },
-//     listView: {
-//         type: Boolean,
-//         default: false
-//     }
-// })
 
 
 const userSchema = new mongoose.Schema({

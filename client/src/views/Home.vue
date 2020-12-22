@@ -146,7 +146,7 @@
                 mandatory
                 color="amber"
                 >
-                <v-list-item @click="filtering = false">
+                <v-list-item @click="removeFilters">
                     <v-list-item-title>
                         <span><v-icon>mdi-lightbulb-outline</v-icon></span>
                         <span class="ml-5"></span>
@@ -179,7 +179,7 @@
                     </v-list-item-title>
                 </v-list-item>
 
-                <v-list-item>
+                <v-list-item @click="archiveStatus = true">
                     <v-list-item-title><span><v-icon>mdi-archive-outline</v-icon></span>
                     <span class="ml-5"></span>
                     <span class="col align-items-center">Archive</span></v-list-item-title>
@@ -455,7 +455,7 @@
             <div v-if="myNotes.length == 0" class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
 
             <div style="padding: 0px 7%" v-show="archiveStatus">
-                <Archive/>
+                <Archive :myArchiveNotes="myArchiveNotes"/>
             </div>
         </div> 
         <!-- end wrapper -->
@@ -773,6 +773,7 @@ export default {
 
 
         onClickFilter(label){
+            this.archiveStatus = false
             this.tempNotes = this.myNotes
             this.filtering = true
             this.filteredNotes = this.tempNotes.filter( notes => {
@@ -794,6 +795,11 @@ export default {
             .finally( () => {
                 this.checkUserSetting()        
             })
+        },
+
+        removeFilters(){
+            this.filtering = false
+            this.archiveStatus = false
         }
     },
 
