@@ -695,6 +695,13 @@ export default {
             else{
                 this.$vuetify.theme.dark = false
             }
+
+            if(userOptions.listView == true){
+                this.listView = true
+            }
+            else{
+                this.listView = false
+            }
         },
 
 
@@ -757,9 +764,19 @@ export default {
         },
 
 
-        onClickListToggler(val){
+        async onClickListToggler(val){
             this.listView = val
             console.log(val)
+
+            await this.$http.post('http://localhost:3000/api/listToggler', { val: val }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            .then( res => {
+                localStorage.removeItem('user-options')
+                localStorage.setItem('user-options', JSON.stringify(res.body.option))
+            })
+            .catch( err => console.log(err))
+            .finally( () => {
+                this.checkUserSetting()        
+            })
         }
     },
 
