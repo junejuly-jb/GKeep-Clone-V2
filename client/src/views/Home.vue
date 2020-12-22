@@ -19,7 +19,7 @@
             </v-tooltip>
             <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn v-bind="attrs" v-on="on" icon v-show="!listView" @click="listView = true">
+                    <v-btn v-bind="attrs" v-on="on" icon v-show="!listView" @click="onClickListToggler(true)">
                         <v-icon>mdi-view-agenda-outline</v-icon>
                     </v-btn>
                 </template>
@@ -27,7 +27,7 @@
             </v-tooltip>
             <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn v-bind="attrs" v-on="on" icon v-show="listView" @click="listView = false">
+                    <v-btn v-bind="attrs" v-on="on" icon v-show="listView" @click="onClickListToggler(false)">
                         <v-icon>mdi-view-grid-outline</v-icon>
                     </v-btn>
                 </template>
@@ -245,6 +245,8 @@
                         </v-container>
                     </v-card>
                 </div>
+
+
             <!-- FOR GRID VIEW  (NOT FILTERING)-->
             <div style="padding: 0px 7%" v-show="!listView && !filtering">
                 <masonry
@@ -619,6 +621,8 @@ export default {
             await this.$http.get('http://localhost:3000/api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( (response) => {
                 this.myNotes = response.body
+                // console.log(response.body)
+
             })
             .catch( err => {
                 if(err.status == 401){
@@ -750,6 +754,12 @@ export default {
             this.filteredNotes = this.tempNotes.filter( notes => {
                 return (notes.tags.indexOf(label) >= 0)
             })
+        },
+
+
+        onClickListToggler(val){
+            this.listView = val
+            console.log(val)
         }
     },
 

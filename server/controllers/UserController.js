@@ -16,4 +16,14 @@ const darkModeToggler = async (req, res) => {
     })
     
 }
-module.exports = {userDetails, darkModeToggler}
+
+
+const listToggler = async (req, res) => {
+    
+    await User.findOneAndUpdate({ _id: req.user }, { $set: { "options.listView": req.body.val } }, { returnOriginal: false, useFindAndModify: false }, (err, doc) => {
+        if (err) return res.status(400).send(err)
+        return res.status(200).json({ message: 'settings updated', option: doc.options })
+    })
+
+}
+module.exports = {userDetails, darkModeToggler, listToggler}
