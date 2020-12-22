@@ -195,6 +195,8 @@
                 </v-list-item-group>
             </v-list>
         </v-navigation-drawer>
+
+
         <div class="content-wrapper">
             <div class="pt-5">
                 <v-card transition="slide-x-transition" v-show="!typingMode" max-width="650" style="margin: auto;" class="mb-5 rounded-lg">
@@ -248,7 +250,7 @@
 
 
             <!-- FOR GRID VIEW  (NOT FILTERING)-->
-            <div style="padding: 0px 7%" v-show="!listView && !filtering">
+            <div style="padding: 0px 7%" v-show="!listView && !filtering && !archiveStatus">
                 <masonry
                     :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
                     :gutter="{default: '30px', 700: '10px'}"
@@ -313,7 +315,7 @@
 
             <!-- FOR GRID VIEW (FILTERING) -->
 
-            <div style="padding: 0px 7%" v-show="!listView && filtering">
+            <div style="padding: 0px 7%" v-show="!listView && filtering && !archiveStatus">
                 <masonry
                     :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
                     :gutter="{default: '30px', 700: '10px'}"
@@ -378,7 +380,7 @@
 
 
             <!-- FOR LIST VIEW  (NOT FILTERING)-->
-            <div style="padding: 0px 7%" v-show="listView && !filtering">
+            <div style="padding: 0px 7%" v-show="listView && !filtering && !archiveStatus">
                 <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
                     <v-card outlined>
                         <v-container>
@@ -416,7 +418,7 @@
 
 
             <!-- FOR LIST VIEW (FILTERING) -->
-            <div style="padding: 0px 7%" v-show="listView && filtering">
+            <div style="padding: 0px 7%" v-show="listView && filtering && !archiveStatus">
                 <div v-for="(note, index) in filteredNotes" :key="index" class="mt-5">
                     <v-card outlined>
                         <v-container>
@@ -452,8 +454,11 @@
             </div>
             <div v-if="myNotes.length == 0" class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
 
-        </div>
-
+            <div style="padding: 0px 7%" v-show="archiveStatus">
+                <Archive/>
+            </div>
+        </div> 
+        <!-- end wrapper -->
 
 
         <!-- dialog  end session -->
@@ -573,7 +578,12 @@
     </v-app>
 </template>
 <script>
+import Archive from '../components/Archive.vue'
 export default {
+    name: 'Home',
+    components: {
+        Archive
+    },
     data: () => ({
         drawer: true,
         dialog: false,
@@ -614,15 +624,22 @@ export default {
         c_tag: [],
         tempNotes: [],
         filteredNotes: [],
-        filtering: false
+        filtering: false,
+        archiveStatus: false,
+        myArchiveNotes: [],
+
     }),
     methods: {
         async notes(){
             await this.$http.get('http://localhost:3000/api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( (response) => {
-                this.myNotes = response.body
-                // console.log(response.body)
-
+                this.myNotes = response.body.filter( note => {
+                    return note.archive != true
+                })
+                this.myArchiveNotes = response.body.filter( notes => {
+                    return notes.archive == true
+                })
+                console.log(this.myArchiveNotes)
             })
             .catch( err => {
                 if(err.status == 401){
