@@ -17,6 +17,7 @@ router.post('/addCustomTag', authenticate, NoteController.addCustomTag)
 router.post('/setUnsetArchiveStatus/:id', authenticate, NoteController.setUnsetArchiveStatus)
 router.post('/darkModeToggler', authenticate, UserController.darkModeToggler)
 router.post('/deleteLabel', authenticate, NoteController.deleteLabel)
+router.post('/listToggler', authenticate, UserController.listToggler)
 
 router.post('/deleteNote', authenticate, NoteController.deleteNote)
 router.put('/updateNote/:id', authenticate, NoteController.updateNote)
