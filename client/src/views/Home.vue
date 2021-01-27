@@ -223,13 +223,6 @@
                         </v-container>
                         <v-container>
                             <v-card-actions>
-                                <!-- <v-tooltip bottom>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn icon v-bind="attrs" v-on="on"><v-icon>mdi-tag-outline</v-icon></v-btn>
-                                    </template>
-                                     <span>Add tag</span>
-                                </v-tooltip> -->
-
                                 <v-select
                                     prepend-icon="mdi-tag-outline"
                                     v-model="newNote.tags"
@@ -277,7 +270,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn x-small fab icon v-bind="attrs" v-on="on"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                                    <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="addLabelDialog = true"><v-icon>mdi-tag-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Add tag</span>
                                             </v-tooltip>
@@ -524,6 +517,36 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+
+        <!-- addLabel Dialog -->
+        <v-dialog
+            v-model="addLabelDialog"
+            persistent
+            max-width="300"
+            >
+            <v-card>
+                <v-card-title>
+                Add label
+                </v-card-title>
+                <div style="width: 100%; padding: 0% 7% 0% 7%;">
+                    <div v-for="(label, index) in labels" :key="index">
+                        <div>label</div>
+                    </div>
+                </div>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    @click="addLabelDialog = false"
+                >
+                    Done
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <!-- end add label dialog -->
         
 
         <!-- confirm delete dialog  -->
@@ -542,7 +565,7 @@
                 <v-spacer></v-spacer>
                 <v-btn
                     text
-                    @click="dialog = false"
+                    @click="confirmDeleteDialog = false"
                 >
                     Close
                 </v-btn>
@@ -585,6 +608,7 @@ export default {
         Archive
     },
     data: () => ({
+
         drawer: true,
         dialog: false,
         sesh_err: '',
@@ -601,6 +625,7 @@ export default {
         labels: [],
         addLabel: '',
         myNotes: [],
+        addLabelDialog: false,
 
         //user
         userInfo: '',
