@@ -249,7 +249,7 @@
                     :gutter="{default: '30px', 700: '10px'}"
                     >
                         <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
-                            <v-card outlined>
+                            <v-card outlined class="blue darken-1">
                                 <v-container>
                                     <div class="float-right">
                                         <v-icon small>mdi-circle-outline</v-icon>
@@ -260,8 +260,10 @@
                                         <v-chip
                                         class="mr-1"
                                         outlined
+                                        close
                                         v-for="(noteTags, i) in note.tags"
                                         :key="i" small
+                                        @click:close="noteTags.splice(1, i)"
                                         >
                                         {{noteTags}}
                                         </v-chip>
@@ -335,7 +337,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn x-small fab icon v-bind="attrs" v-on="on"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                                    <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Add tag</span>
                                             </v-tooltip>
@@ -394,13 +396,36 @@
                             </div>
                             <div class="d-flex">
                                 <div>
-                                    <v-btn fab icon x-small><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                        </template>
+                                        <span>Add tag</span>
+                                    </v-tooltip>
                                 </div>
                                 <div>
-                                    <v-btn fab icon x-small><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                        </template>
+                                        <span>Delete</span>
+                                    </v-tooltip>
                                 </div>
                                 <div>
-                                    <v-btn fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                        </template>
+                                        <span>Edit</span>
+                                    </v-tooltip>
+                                </div>
+                                <div>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                        </template>
+                                        <span>Archive</span>
+                                    </v-tooltip>
                                 </div>
                             </div>
                         </v-container>
@@ -432,13 +457,36 @@
                             </div>
                             <div class="d-flex">
                                 <div>
-                                    <v-btn fab icon x-small><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                        </template>
+                                        <span>Add tag</span>
+                                    </v-tooltip>
                                 </div>
                                 <div>
-                                    <v-btn fab icon x-small><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                        </template>
+                                        <span>Delete</span>
+                                    </v-tooltip>
                                 </div>
                                 <div>
-                                    <v-btn fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                        </template>
+                                        <span>Edit</span>
+                                    </v-tooltip>
+                                </div>
+                                <div>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                        </template>
+                                        <span>Archive</span>
+                                    </v-tooltip>
                                 </div>
                             </div>
                         </v-container>
@@ -675,14 +723,11 @@ export default {
             console.log(this.selectedLabel)
             await this.$http.post('http://localhost:3000/api/editNoteWithExistingLabel', { id: this.selected_noteId, tags: this.selectedLabel},
              { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
-                .then( () => {
+                .then( (res) => {
                     this.snackbar = true,
-                    this.msg = 'label added to this note'
+                    this.msg = res.body.message
                     this.myNotes[this.selected_index].tags.splice(0, this.myNotes[this.selected_index].tags.length)
                     this.myNotes[this.selected_index].tags.push(...this.selectedLabel)
-                    // for(let j = 0; j < this.myNotes[this.selected_index].tags.length; j++){
-                    //     this.myNotes[this.selected_index].tags.push(this.selectedLabel[j])
-                    // }
                 })
                 .catch( err => {
                     if(err.status == 401){
@@ -690,7 +735,12 @@ export default {
                         this.sesh_err = err.body.message
                     }
                 })
-                .finally(() => { this.selectedLabel = []})
+                .finally(() => { 
+                    this.selectedLabel = []
+                    this.selected_index = -1
+                    this.selected_noteId = ''
+                    this.addLabelDialog = false
+                })
         },
         popAddLabelDialog(i, note){
             this.addLabelDialog = true
