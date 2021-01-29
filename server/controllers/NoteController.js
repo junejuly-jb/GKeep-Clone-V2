@@ -129,7 +129,7 @@ const deleteLabel = async (req, res) => {
 
 const editNoteWithExistingLabel = async (req, res) => {
     await User.findOneAndUpdate({ _id: req.user, "notes._id": req.body.id }, { $addToSet: { "notes.$.tags": { $each: req.body.tags } } },
-            { returnOriginal: false, useFindAndModify: false }, (err, document) => { 
+            { returnOriginal: false, useFindAndModify: true }, (err, document) => { 
                 if(err) return res.status(500).send(err)
                 return res.status(200).send(document)
         })

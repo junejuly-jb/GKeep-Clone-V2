@@ -535,7 +535,7 @@
                         v-model="selectedLabel"
                         :label="label"
                         :value="label"
-                        dense
+                        class="shrink mr-0 mt-0"
                         >
                         </v-checkbox>
                     </div>
@@ -544,9 +544,16 @@
                 <v-spacer></v-spacer>
                 <v-btn
                     text
+                    color="red"
                     @click="addLabelDialog = false"
                 >
-                    Done
+                    Close
+                </v-btn>
+                <v-btn
+                    text
+                    @click="btnUpdateExistingTag"
+                >
+                    Update
                 </v-btn>
                 </v-card-actions>
             </v-card>
@@ -623,6 +630,8 @@ export default {
         msg: '',
         typingMode: false, 
         form: {},
+        selected_noteId: '',
+        selected_index: -1,
 
         // labels corner 
         labelDialog: false,
@@ -662,10 +671,29 @@ export default {
 
     }),
     methods: {
+        async btnUpdateExistingTag(){
+            console.log(this.selectedLabel)
+            await this.$http.post('http://localhost:3000/api/editNoteWithExistingLabel', { id: this.selected_noteId, tags: this.selectedLabel},
+             { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+                .then( () => {
+                    this.snackbar = true,
+                    this.msg = 'label added to this note'
+                    console.log(this.myNotes[this.selected_index])
+                })
+                .catch( err => {
+                    if(err.status == 401){
+                        this.dialog = true,
+                        this.sesh_err = err.body.message
+                    }
+                })
+                .finally(() => { this.selectedLabel = []})
+        },
         popAddLabelDialog(i, note){
-            console.log('index:' + i)
-            console.log('note:' + note.title)
-            console.log('note:' + note._id)
+            this.addLabelDialog = true
+            this.selectedLabel = note.tags.slice()
+            this.selected_noteId = note._id
+            console.log('selected:', this.selectedLabel)
+            this.selected_index = i
         },
         async notes(){
             await this.$http.get('http://localhost:3000/api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
@@ -676,7 +704,7 @@ export default {
                 this.myArchiveNotes = response.body.filter( notes => {
                     return notes.archive == true
                 })
-                console.log(this.myArchiveNotes)
+                console.log(this.myNotes)
             })
             .catch( err => {
                 if(err.status == 401){
