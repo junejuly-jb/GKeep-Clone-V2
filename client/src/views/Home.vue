@@ -678,7 +678,11 @@ export default {
                 .then( () => {
                     this.snackbar = true,
                     this.msg = 'label added to this note'
-                    console.log(this.myNotes[this.selected_index])
+                    this.myNotes[this.selected_index].tags.splice(0, this.myNotes[this.selected_index].tags.length)
+                    this.myNotes[this.selected_index].tags.push(...this.selectedLabel)
+                    // for(let j = 0; j < this.myNotes[this.selected_index].tags.length; j++){
+                    //     this.myNotes[this.selected_index].tags.push(this.selectedLabel[j])
+                    // }
                 })
                 .catch( err => {
                     if(err.status == 401){
