@@ -104,14 +104,15 @@ const setUnsetArchiveStatus = async (req, res) => {
             { returnOriginal: false, useFindAndModify: false }, (err, document) => { 
                 if(err) return res.status(500).send(err)
                 return res.status(200).send(document)
-            })
+        })
+        return res.status(200).send(document)
     }
     else {
         await User.findOneAndUpdate({ _id: req.user, "notes._id": req.params.id }, { $set: { "notes.$.archive": true } },
             { returnOriginal: false, useFindAndModify: false }, (err, document) => {
                 if (err) return res.status(500).send(err)
                 return res.status(200).send(document)
-            })
+        })
     }
 
 }
@@ -126,9 +127,19 @@ const deleteLabel = async (req, res) => {
 
 }
 
+const editNoteWithExistingLabel = async (req, res) => {
+    await User.findOneAndUpdate({ _id: req.user, "notes._id": req.body.id }, { $addToSet: { "notes.$.tags": { $each: req.body.tags } } },
+            { returnOriginal: false, useFindAndModify: false }, (err, document) => { 
+                if(err) return res.status(500).send(err)
+                return res.status(200).send(document)
+        })
+        
+        
+}
+
 
 module.exports = {
     createNote, myNotes, noteDetails, deleteNote,
     updateNote, bulkDeleteNote, addCustomTag,
-    setUnsetArchiveStatus, deleteLabel
+    setUnsetArchiveStatus, deleteLabel, editNoteWithExistingLabel
 }

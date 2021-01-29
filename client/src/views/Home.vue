@@ -270,7 +270,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="addLabelDialog = true"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                                    <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Add tag</span>
                                             </v-tooltip>
@@ -531,7 +531,13 @@
                 </v-card-title>
                 <div style="width: 100%; padding: 0% 7% 0% 7%;">
                     <div v-for="(label, index) in labels" :key="index">
-                        <div>label</div>
+                        <v-checkbox
+                        v-model="selectedLabel"
+                        :label="label"
+                        :value="label"
+                        dense
+                        >
+                        </v-checkbox>
                     </div>
                 </div>
                 <v-card-actions>
@@ -626,6 +632,7 @@ export default {
         addLabel: '',
         myNotes: [],
         addLabelDialog: false,
+        selectedLabel: [],
 
         //user
         userInfo: '',
@@ -655,6 +662,11 @@ export default {
 
     }),
     methods: {
+        popAddLabelDialog(i, note){
+            console.log('index:' + i)
+            console.log('note:' + note.title)
+            console.log('note:' + note._id)
+        },
         async notes(){
             await this.$http.get('http://localhost:3000/api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( (response) => {
