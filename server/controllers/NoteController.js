@@ -144,13 +144,14 @@ const editNoteWithExistingLabel = async (req, res) => {
 }
 
 const removeSingleNoteTag = async (req, res) => {
-
+    console.log(req.params.id)
+    console.log(req.body.tag)
     await User.findOneAndUpdate({ _id: req.user, "notes._id": req.params.id }, { $pull: { "notes.$.tags": req.body.tag } }, {
         useFindAndModify: false
-    }, (err, doc) => {
-            if (err) return res.status(500).send(err)
-                return res.status(200).json(doc)
-        })
+    }, (err) => {
+        if (err) return res.status(500).send(err)
+            return res.status(200).json({ message: 'Tag deleted' })
+    })
 }
 
 module.exports = {
