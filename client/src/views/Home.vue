@@ -263,7 +263,7 @@
                                         close
                                         v-for="(noteTags, i) in note.tags"
                                         :key="i" small
-                                        @click:close="noteTags.splice(1, i)"
+                                        @click:close="deleteSingleTag(noteTags, i, note)"
                                         >
                                         {{noteTags}}
                                         </v-chip>
@@ -719,6 +719,27 @@ export default {
 
     }),
     methods: {
+         async deleteSingleTag(tag, i, note){
+            console.log(tag)
+            // note.tags.splice(i, 1)
+            await this.$http.post('http://localhost:3000/api/remove-tag/' + note._id,
+            { tag: tag }, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            .then((res) => {
+                this.msg = res.body.message
+                this.snackbar = true
+            })
+            .catch( err => {
+                if(err.status == 401){
+                    this.dialog = true,
+                    this.sesh_err = err.body.message
+                }
+                else{
+                    this.msg = err.body.message
+                    this.snackbar = true
+                }
+            })
+            .finally( () => note.tags.splice(i, 1))
+        },
         async btnUpdateExistingTag(){
             console.log(this.selectedLabel)
             await this.$http.post('http://localhost:3000/api/editNoteWithExistingLabel', { id: this.selected_noteId, tags: this.selectedLabel},
