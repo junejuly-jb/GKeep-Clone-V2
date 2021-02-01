@@ -249,7 +249,7 @@
                     :gutter="{default: '30px', 700: '10px'}"
                     >
                         <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
-                            <v-card outlined class="blue darken-1">
+                            <v-card outlined color="red">
                                 <v-container>
                                     <div class="float-right">
                                         <v-icon small>mdi-circle-outline</v-icon>
@@ -299,6 +299,14 @@
                                                     <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Archive</span>
+                                            </v-tooltip>
+                                        </div>
+                                        <div>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn @click.stop="showColorPickerDialog=true" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                                </template>
+                                                <span>Color</span>
                                             </v-tooltip>
                                         </div>
                                     </div>
@@ -429,6 +437,14 @@
                                             <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
                                         </template>
                                         <span>Archive</span>
+                                    </v-tooltip>
+                                </div>
+                                <div>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn @click.stop="showColorPickerDialog=true" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                        </template>
+                                        <span>Color</span>
                                     </v-tooltip>
                                 </div>
                             </div>
@@ -665,17 +681,20 @@
                 </v-btn>
             </template>
             </v-snackbar>
+            <ColorPickerDialog :visible="showColorPickerDialog" @close="showColorPickerDialog=false"/>
     </v-app>
 </template>
 <script>
 import Archive from '../components/Archive.vue'
+import ColorPickerDialog from '../components/ColorPickerDialog.vue'
 export default {
     name: 'Home',
     components: {
-        Archive
+        Archive, ColorPickerDialog
     },
     data: () => ({
 
+        showColorPickerDialog: false,
         drawer: true,
         dialog: false,
         sesh_err: '',
