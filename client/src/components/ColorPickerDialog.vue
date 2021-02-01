@@ -15,7 +15,7 @@
             >
             <v-radio
                 label="Default"
-                value="default"
+                value=""
                 color="gray"
             ></v-radio>
             <v-radio
@@ -57,9 +57,9 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="show = false"
+            @click="btnSetColor"
           >
-            Done
+            Set
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -69,7 +69,7 @@
 export default {
     props: ['visible'],
     data: () => ({
-        selected_color: 'default'
+        selected_color: ''
     }),
     computed: {
         show: {
@@ -81,6 +81,11 @@ export default {
             this.$emit('close')
             }
         }
+        }
+    },
+    methods: {
+        btnSetColor(){
+            console.log(this.selected_color)
         }
     }
 }
