@@ -249,7 +249,7 @@
                     :gutter="{default: '30px', 700: '10px'}"
                     >
                         <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
-                            <v-card outlined color="red">
+                            <v-card outlined :color="note.color === 'default' ? '' : note.color">
                                 <v-container>
                                     <div class="float-right">
                                         <v-icon small>mdi-circle-outline</v-icon>
@@ -982,5 +982,8 @@ export default {
         height: 70vh;
         color: gray;
         font-size: 45px;
+    }
+    .border{
+        border: 0.5px solid lightgray;
     }
 </style>

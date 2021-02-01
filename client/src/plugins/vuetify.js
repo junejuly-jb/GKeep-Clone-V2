@@ -12,6 +12,7 @@ export default new Vuetify({
                 purple: "#AB47BC",
                 indigo: "#5C6BC0",
                 blue: "#42A5F5",
+                default: "#FFFFFF",
             },
             dark: {
                 red: "#C62828",
@@ -19,6 +20,7 @@ export default new Vuetify({
                 purple: "#6A1B9A",
                 indigo: "#283593",
                 blue: "#1565C0",
+                default: "#1E1E1E"
             }
         }
     }
