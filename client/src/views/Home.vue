@@ -327,8 +327,10 @@
                                         <v-chip
                                         class="mr-1"
                                         outlined
+                                        close
                                         v-for="(noteTags, i) in note.tags"
                                         :key="i" small
+                                        @click:close="deleteSingleTag(noteTags, i, note)"
                                         >
                                         {{noteTags}}
                                         </v-chip>
@@ -386,10 +388,12 @@
                             <p>{{ note.content }}</p>
                             <div class="mt-3 mb-4">
                                 <v-chip
-                                class="mr-1 mb-1"
+                                class="mr-1"
                                 outlined
+                                close
                                 v-for="(noteTags, i) in note.tags"
                                 :key="i" small
+                                @click:close="deleteSingleTag(noteTags, i, note)"
                                 >
                                 {{noteTags}}
                                 </v-chip>
@@ -447,10 +451,12 @@
                             <p>{{ note.content }}</p>
                             <div class="mt-3 mb-4">
                                 <v-chip
-                                class="mr-1 mb-1"
+                                class="mr-1"
                                 outlined
+                                close
                                 v-for="(noteTags, i) in note.tags"
                                 :key="i" small
+                                @click:close="deleteSingleTag(noteTags, i, note)"
                                 >
                                 {{noteTags}}
                                 </v-chip>
