@@ -249,7 +249,7 @@
                     :gutter="{default: '30px', 700: '10px'}"
                     >
                         <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
-                            <v-card outlined>
+                            <v-card outlined color="red">
                                 <v-container>
                                     <div class="float-right">
                                         <v-icon small>mdi-circle-outline</v-icon>
