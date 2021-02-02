@@ -154,8 +154,23 @@ const removeSingleNoteTag = async (req, res) => {
     })
 }
 
+const colorUpdate = async (req, res) => {
+
+    try {
+        await User.findOneAndUpdate({ _id: req.user, "notes._id": req.params.id }, { $set: { "notes.$.color": req.body.color }, },
+        { returnOriginal: false, useFindAndModify: false })
+            .then(response => {
+            return res.status(200).json(response)
+        })
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+
+
+}
+
 module.exports = {
     createNote, myNotes, noteDetails, deleteNote,
     updateNote, bulkDeleteNote, addCustomTag,
-    setUnsetArchiveStatus, deleteLabel, editNoteWithExistingLabel, removeSingleNoteTag
+    setUnsetArchiveStatus, deleteLabel, editNoteWithExistingLabel, removeSingleNoteTag, colorUpdate
 }

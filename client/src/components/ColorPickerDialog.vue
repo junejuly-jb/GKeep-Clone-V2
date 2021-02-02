@@ -59,7 +59,7 @@
             text
             @click="btnSetColor"
           >
-            Set
+            Set {{note_color}}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -67,10 +67,14 @@
 </template>
 <script>
 export default {
-    props: ['visible','note_color'],
-    data: () => ({
-        
-    }),
+    props: ['visible','note_color', 'note_colorID'],
+    
+    
+    data: function(){
+      return {
+        color: ''
+      }
+    },
     computed: {
         show: {
             get () {
@@ -82,13 +86,24 @@ export default {
                 }
             }
         },
-        selected_color: function(){
+        selected_color: {
+          get(){
             return this.note_color
+          },
+          set(value){
+            this.color = value
+          }
         }
     },
     methods: {
-        btnSetColor(){
-            console.log(this.selected_color)
+        async btnSetColor(){
+          // console.log(this.color)
+          await this.$http.post('http://localhost:3000/api/update-color/' + this.note_colorID,
+            { color: this.color }, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            .then((res) => {
+                this.msg = res.body.message
+                this.snackbar = true
+            })
         }
     }
 }
