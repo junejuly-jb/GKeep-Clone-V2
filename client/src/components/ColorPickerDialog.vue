@@ -15,7 +15,7 @@
             >
             <v-radio
                 label="Default"
-                value=""
+                value="default"
                 color="gray"
             ></v-radio>
             <v-radio
@@ -67,20 +67,23 @@
 </template>
 <script>
 export default {
-    props: ['visible'],
+    props: ['visible','note_color'],
     data: () => ({
-        selected_color: ''
+        
     }),
     computed: {
         show: {
-        get () {
-            return this.visible
-        },
-        set (value) {
-            if (!value) {
-            this.$emit('close')
+            get () {
+                return this.visible
+            },
+            set (value) {
+                if (!value) {
+                this.$emit('close')
+                }
             }
-        }
+        },
+        selected_color: function(){
+            return this.note_color
         }
     },
     methods: {

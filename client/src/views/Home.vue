@@ -304,7 +304,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn @click.stop="showColorPickerDialog=true" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                                    <v-btn @click.stop="btnToggleColorPicker(note.color)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
                                                 </template>
                                                 <span>Color</span>
                                             </v-tooltip>
@@ -681,7 +681,7 @@
                 </v-btn>
             </template>
             </v-snackbar>
-            <ColorPickerDialog :visible="showColorPickerDialog" @close="showColorPickerDialog=false"/>
+            <ColorPickerDialog :note_color="note_color" :visible="showColorPickerDialog" @close="showColorPickerDialog=false"/>
     </v-app>
 </template>
 <script>
@@ -741,9 +741,15 @@ export default {
         filtering: false,
         archiveStatus: false,
         myArchiveNotes: [],
+        note_color: ''
 
     }),
     methods: {
+        btnToggleColorPicker(color){
+            this.showColorPickerDialog=true
+            this.note_color = color
+            console.log(this.note_color)
+        },
          async deleteSingleTag(tag, i, note){
             console.log(tag)
             // note.tags.splice(i, 1)
