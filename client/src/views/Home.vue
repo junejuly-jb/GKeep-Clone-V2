@@ -685,7 +685,8 @@
                 </v-btn>
             </template>
             </v-snackbar>
-            <ColorPickerDialog :note_color="note_color" :visible="showColorPickerDialog" @close="showColorPickerDialog=false"/>
+            <ColorPickerDialog :note_colorID="note_colorID" :note_color="note_color" :visible="showColorPickerDialog" @close="showColorPickerDialog=false"
+            @new_color="note_color = $event"/>
     </v-app>
 </template>
 <script>
@@ -745,14 +746,21 @@ export default {
         filtering: false,
         archiveStatus: false,
         myArchiveNotes: [],
-        note_color: ''
+        note_color: '',
+        note_colorID: '',
+        colorEdit_selectedNote: {}
 
     }),
     methods: {
         btnToggleColorPicker(note){
             this.showColorPickerDialog=true
             this.note_color = note.color
-            console.log(this.note_color)
+            this.note_colorID = note._id
+            this.colorEdit_selectedNote = note
+            console.log(this.note_color, this.colorEdit_selectedNote)
+        },
+        updateFrontColor(){
+            console.log('from parent!')
         },
          async deleteSingleTag(tag, i, note){
             console.log(tag)
