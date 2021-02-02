@@ -249,7 +249,10 @@
                     :gutter="{default: '30px', 700: '10px'}"
                     >
                         <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
-                            <v-card outlined :color="note.color === 'default' ? '' : note.color">
+                            <v-card 
+                            outlined :color="note.color === 'default' ? '' : note.color"
+                            :class="note.color === 'default' ? '' : 'white--text'"
+                            >
                                 <v-container>
                                     <div class="float-right">
                                         <v-icon small>mdi-circle-outline</v-icon>
@@ -261,6 +264,7 @@
                                         class="mr-1"
                                         outlined
                                         close
+                                        :color="note.color === 'default' ? '' : 'white'"
                                         v-for="(noteTags, i) in note.tags"
                                         :key="i" small
                                         @click:close="deleteSingleTag(noteTags, i, note)"
@@ -272,7 +276,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                                    <v-btn :color="note.color === 'default' ? '' : 'white'" x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Add tag</span>
                                             </v-tooltip>
@@ -280,7 +284,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                                    <v-btn :color="note.color === 'default' ? '' : 'white'" v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Delete</span>
                                             </v-tooltip>
@@ -288,7 +292,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                                    <v-btn :color="note.color === 'default' ? '' : 'white'" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Edit</span>
                                             </v-tooltip>
@@ -296,7 +300,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                                    <v-btn :color="note.color === 'default' ? '' : 'white'" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Archive</span>
                                             </v-tooltip>
@@ -304,7 +308,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn @click.stop="btnToggleColorPicker(note.color)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                                    <v-btn :color="note.color === 'default' ? '' : 'white'" @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
                                                 </template>
                                                 <span>Color</span>
                                             </v-tooltip>
@@ -745,9 +749,9 @@ export default {
 
     }),
     methods: {
-        btnToggleColorPicker(color){
+        btnToggleColorPicker(note){
             this.showColorPickerDialog=true
-            this.note_color = color
+            this.note_color = note.color
             console.log(this.note_color)
         },
          async deleteSingleTag(tag, i, note){
