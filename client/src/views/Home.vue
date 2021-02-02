@@ -686,7 +686,7 @@
             </template>
             </v-snackbar>
             <ColorPickerDialog :note_colorID="note_colorID" :note_color="note_color" :visible="showColorPickerDialog" @close="showColorPickerDialog=false"
-            @new_color="note_color = $event"/>
+            @success="onSuccessNoteColor" @error="onErrorNoteColor"/>
     </v-app>
 </template>
 <script>
@@ -759,8 +759,15 @@ export default {
             this.colorEdit_selectedNote = note
             console.log(this.note_color, this.colorEdit_selectedNote)
         },
-        updateFrontColor(){
-            console.log('from parent!')
+        onSuccessNoteColor(value){
+            this.snackbar = true
+            this.msg = "Color updated"
+            this.colorEdit_selectedNote.color = value
+            this.showColorPickerDialog = false
+        },
+        onErrorNoteColor(value){
+            this.snackbar = true
+            this.msg = value
         },
          async deleteSingleTag(tag, i, note){
             console.log(tag)
