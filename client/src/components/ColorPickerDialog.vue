@@ -100,9 +100,11 @@ export default {
           // console.log(this.color)
           await this.$http.post('http://localhost:3000/api/update-color/' + this.note_colorID,
             { color: this.color }, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
-            .then((res) => {
-                this.msg = res.body.message
-                this.snackbar = true
+            .then(() => {
+                this.$emit('success', this.color)
+            })
+            .catch(err => {
+              this.$emit('error', err)
             })
         }
     }
