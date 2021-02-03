@@ -26,14 +26,6 @@
                                     <div>
                                         <v-tooltip bottom>
                                             <template v-slot:activator="{ on, attrs }">
-                                                <v-btn x-small fab icon v-bind="attrs" v-on="on"><v-icon>mdi-tag-outline</v-icon></v-btn>
-                                            </template>
-                                            <span>Add tag</span>
-                                        </v-tooltip>
-                                    </div>
-                                    <div>
-                                        <v-tooltip bottom>
-                                            <template v-slot:activator="{ on, attrs }">
                                                 <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                                             </template>
                                             <span>Delete</span>
@@ -50,7 +42,7 @@
                                     <div>
                                         <v-tooltip bottom>
                                             <template v-slot:activator="{ on, attrs }">
-                                                <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                                <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-arrow-up-outline</v-icon></v-btn>
                                             </template>
                                             <span>Archive</span>
                                         </v-tooltip>
@@ -64,9 +56,26 @@
 </template>
 <script>
 export default {
-    props: ['myArchiveNotes'],
+    props: ['myArchiveNotes', 'myNotes'],
     data: () => ({
 
-    })
+    }),
+    methods: {
+        async btnArchive(note, index){
+
+            await this.$http.post('http://localhost:3000/api/setUnsetArchiveStatus/' + note._id,
+            { status: note.archive },
+            { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
+            .then( () => {
+                this.myArchiveNotes.splice(index, 1)
+                note.archive = false
+                this.myNotes.push(note)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+        },
+    }
 }
 </script>
