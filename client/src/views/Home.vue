@@ -373,9 +373,17 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Archive</span>
+                                            </v-tooltip>
+                                        </div>
+                                        <div>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                                </template>
+                                                <span>Color</span>
                                             </v-tooltip>
                                         </div>
                                     </div>
@@ -436,7 +444,7 @@
                                 <div>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
                                         </template>
                                         <span>Archive</span>
                                     </v-tooltip>
@@ -444,7 +452,7 @@
                                 <div>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn @click.stop="showColorPickerDialog=true" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                            <v-btn @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
                                         </template>
                                         <span>Color</span>
                                     </v-tooltip>
@@ -454,8 +462,6 @@
                     </v-card>
                 </div>
             </div>
-
-
 
             <!-- FOR LIST VIEW (FILTERING) -->
             <div style="padding: 0px 7%" v-show="listView && filtering && !archiveStatus">
@@ -507,9 +513,17 @@
                                 <div>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
                                         </template>
                                         <span>Archive</span>
+                                    </v-tooltip>
+                                </div>
+                                <div>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                        </template>
+                                        <span>Color</span>
                                     </v-tooltip>
                                 </div>
                             </div>
@@ -517,10 +531,10 @@
                     </v-card>
                 </div>
             </div>
-            <div v-if="myNotes.length == 0" class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
+            <div v-if="myNotes.length == 0 && !archiveStatus" class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
 
             <div style="padding: 0px 7%" v-show="archiveStatus">
-                <Archive :myArchiveNotes="myArchiveNotes"/>
+                <Archive :myArchiveNotes="myArchiveNotes" :myNotes="myNotes"/>
             </div>
         </div> 
         <!-- end wrapper -->
@@ -758,6 +772,7 @@ export default {
                 this.snackbar = true
                 this.msg = "Note archived"
                 this.myNotes.splice(index, 1)
+                note.archive = true
                 this.myArchiveNotes.push(note)
             })
             .catch(err => {
