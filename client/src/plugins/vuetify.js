@@ -8,7 +8,7 @@ export default new Vuetify({
         themes: {
             light: {
                 custom_red: "#F28B82",
-                custom_lorange: "#FBBC04",
+                custom_orange: "#FBBC04",
                 custom_yellow: "#FBBC04",
                 custom_green: "#CCFF90",
                 custom_teal: "#A7FFEB",
