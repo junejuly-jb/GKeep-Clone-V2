@@ -298,7 +298,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Archive</span>
                                             </v-tooltip>
@@ -630,12 +630,10 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-
         <!-- end add label dialog -->
         
 
         <!-- confirm delete dialog  -->
-
         <v-dialog
             v-model="confirmDeleteDialog"
             persistent
@@ -750,6 +748,22 @@ export default {
 
     }),
     methods: {
+        async btnArchive(note, index){
+            console.log(note, index)
+
+            await this.$http.post('http://localhost:3000/api/setUnsetArchiveStatus/' + note._id,
+            { status: note.archive },
+            { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
+            .then( () => {
+                this.snackbar = true
+                this.msg = "Note archived"
+                this.myNotes.splice(index, 1)
+                this.myArchiveNotes.push(note)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
         btnToggleColorPicker(note){
             this.showColorPickerDialog=true
             this.note_color = note.color
@@ -1009,4 +1023,5 @@ export default {
     .border{
         border: 0.5px solid lightgray;
     }
+
 </style>
