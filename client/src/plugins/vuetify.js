@@ -7,20 +7,30 @@ export default new Vuetify({
     theme: {
         themes: {
             light: {
-                red: "#EF5350",
-                pink: "#EC407A",
-                purple: "#AB47BC",
-                indigo: "#5C6BC0",
-                blue: "#42A5F5",
-                default: "#FFFFFF",
+                custom_red: "#F28B82",
+                custom_lorange: "#FBBC04",
+                custom_yellow: "#FBBC04",
+                custom_green: "#CCFF90",
+                custom_teal: "#A7FFEB",
+                custom_blue: "#CBF0F8",
+                custom_darkblue: "#AECBFA",
+                custom_purple: "#D7AEFB",
+                custom_pink: "#FDCFE8",
+                custom_brown: "#E6C9A8",
+                custom_gray: "#E8EAED"
             },
             dark: {
-                red: "#C62828",
-                pink: "#AD1457",
-                purple: "#6A1B9A",
-                indigo: "#283593",
-                blue: "#1565C0",
-                default: "#1E1E1E"
+                custom_red: "#5C2B29",
+                custom_orange: "#614A19",
+                custom_yellow: "#635D19",
+                custom_green: "#345920",
+                custom_teal: "#16504B",
+                custom_blue: "#2D555E",
+                custom_darkblue: "#1E3A5F",
+                custom_purple: "#42275E",
+                custom_pink: "#5B2245",
+                custom_brown: "#442F19",
+                custom_gray: "#3C3F43"
             }
         }
     }

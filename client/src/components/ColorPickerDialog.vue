@@ -20,28 +20,53 @@
             ></v-radio>
             <v-radio
                 label="Red"
-                value="red"
-                color="red"
+                value="custom_red"
+                color="custom_red"
             ></v-radio>
             <v-radio
-                label="Pink"
-                value="pink"
-                color="pink"
+                label="Orange"
+                value="custom_orange"
+                color="custom_orange"
             ></v-radio>
             <v-radio
-                label="Purple"
-                value="purple"
-                color="purple"
+                label="Yellow"
+                value="custom_yellow"
+                color="custom_yellow"
             ></v-radio>
             <v-radio
-                label="Indigo"
-                value="indigo"
-                color="indigo"
+                label="Green"
+                value="custom_green"
+                color="custom_green"
+            ></v-radio>
+             <v-radio
+                label="Teal"
+                value="custom_teal"
+                color="custom_teal"
             ></v-radio>
             <v-radio
                 label="Blue"
-                value="blue"
-                color="blue"
+                value="custom_blue"
+                color="custom_blue"
+            ></v-radio>
+            <v-radio
+                label="Purple"
+                value="custom_purple"
+                color="custom_purple"
+            ></v-radio>
+             <v-radio
+                label="Pink"
+                value="custom_pink"
+                color="custom_pink"
+            ></v-radio>
+             <v-radio
+                label="Brown"
+                value="custom_brown"
+                color="custom_brown"
+            ></v-radio>
+             <v-radio
+                label="Gray"
+                value="custom_gray"
+                color="custom_gray"
             ></v-radio>
             </v-radio-group>
         </v-card-text>
@@ -55,11 +80,11 @@
             Close
           </v-btn>
           <v-btn
-            color="blue darken-1"
+            color="teal"
             text
             @click="btnSetColor"
           >
-            Set {{note_color}}
+            Set
           </v-btn>
         </v-card-actions>
       </v-card>
