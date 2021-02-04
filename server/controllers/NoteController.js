@@ -50,13 +50,9 @@ const noteDetails = async (req, res) => {
 
 const deleteNote = async (req, res) =>
     {
-    await User.updateOne({ _id: req.user }, { $pull: { "notes": { _id: req.body.note_id } } }, { multi: true, returnOriginal: false, useFindAndModify: false },
-    (err, doc) => {
-        if (err) return res.status(500).json(err)
-        return res.status(200).json(doc)
-    })
-            // .then(() => { return res.status(200).json({ message: 'success'}) })
-            // .catch(err => { return res.status(500).json('error deleting note') })
+    await User.updateOne({ _id: req.user }, { $pull: { "notes": { _id: req.body.note_id } } }, {multi: true})
+            .then(() => { return res.status(200).json('Successfully deleted!') })
+            .catch(err => { return res.status(500).json('error deleting note') })
     }
 
 
