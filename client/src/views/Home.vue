@@ -534,7 +534,7 @@
             <div v-if="myNotes.length == 0 && !archiveStatus" class="d-flex justify-center no_notes align-center"><span><v-icon large>mdi-magnify</v-icon> No notes found</span></div>
 
             <div style="padding: 0px 7%" v-show="archiveStatus">
-                <Archive :myArchiveNotes="myArchiveNotes" :myNotes="myNotes"/>
+                <Archive :myArchiveNotes="myArchiveNotes" :myNotes="myNotes" @btnTrashArchive="btnTrashArchiveFunc"/>
             </div>
         </div> 
         <!-- end wrapper -->
@@ -696,7 +696,9 @@
             </template>
             </v-snackbar>
             <ColorPickerDialog :note_colorID="note_colorID" :note_color="note_color" :visible="showColorPickerDialog" @close="showColorPickerDialog=false"
-            @success="onSuccessNoteColor" @error="onErrorNoteColor"/>
+            @success="onSuccessNoteColor"
+            @error="onErrorNoteColor"
+            />
     </v-app>
 </template>
 <script>
@@ -744,6 +746,7 @@ export default {
         //notes
         delSelectedNoteIndex: -1,
         delSelectedNoteId: null,
+        delSelectedNote: {},
         confirmDeleteDialog: false,
         newNote: {
             title: '',
@@ -762,6 +765,12 @@ export default {
 
     }),
     methods: {
+        btnTrashArchiveFunc: function(value){
+            this.confirmDeleteDialog = true
+            this.delSelectedNoteIndex = value.index
+            this.delSelectedNoteId = value.note._id
+            this.delSelectedNote = value.note
+        },
         async btnArchive(note, index){
             console.log(note, index)
 
@@ -944,6 +953,7 @@ export default {
             this.delSelectedNoteIndex = index
             this.delSelectedNoteId = note._id
             this.confirmDeleteDialog = true
+            this.delSelectedNote = note
         },
 
 
@@ -963,7 +973,12 @@ export default {
             .finally(() => {
                 this.delSelectedNoteId = null
                 this.confirmDeleteDialog = false
-                this.myNotes.splice(this.delSelectedNoteIndex, 1)
+                if(this.delSelectedNote.archive == true){
+                    this.myArchiveNotes.splice(this.delSelectedNoteIndex, 1)
+                }
+                else{
+                    this.myNotes.splice(this.delSelectedNoteIndex, 1)
+                }
             })
         },
 

@@ -26,7 +26,7 @@
                                     <div>
                                         <v-tooltip bottom>
                                             <template v-slot:activator="{ on, attrs }">
-                                                <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                                <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="onClickDeleteNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                                             </template>
                                             <span>Delete</span>
                                         </v-tooltip>
@@ -44,7 +44,7 @@
                                             <template v-slot:activator="{ on, attrs }">
                                                 <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-arrow-up-outline</v-icon></v-btn>
                                             </template>
-                                            <span>Archive</span>
+                                            <span>Unarchive</span>
                                         </v-tooltip>
                                     </div>
                                 </div>
@@ -76,6 +76,14 @@ export default {
             })
 
         },
+        onClickDeleteNote(note, index){
+            const noteDetails = {
+                note: note,
+                index: index
+            }
+        this.$emit('btnTrashArchive', noteDetails)
+         
+        }
     }
 }
 </script>
