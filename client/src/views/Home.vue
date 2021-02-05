@@ -891,9 +891,18 @@ export default {
         },
 
 
-        btnDeleteLabel(label, i){
+        async btnDeleteLabel(label, i){
             console.log(label, i)
-            this.labels.splice(i, 1)
+            await this.$http.post('http://localhost:3000/api/deleteLabel', { tag: label }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            .then( () => {
+                this.msg = "tag deleted"
+                this.snackbar = true
+            })
+            .catch( err => {
+                this.msg = err.body.message
+                this.snackbar = true
+            })
+            .finally( () => { this.labels.splice(i, 1) })
         },
 
 
