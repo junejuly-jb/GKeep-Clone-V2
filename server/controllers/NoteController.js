@@ -158,24 +158,26 @@ const colorUpdate = async (req, res) => {
     } catch (error) {
         return res.status(400).json(error)
     }
-
-
 }
 
-const removeCustomTags = async (req, res) => {
-    
-    await User.findOneAndUpdate({ _id: req.user }, { $pull: { customTags: req.body.tag } }, {useFindAndModify: false})
-        .then(response => {
-            return res.status(200).json({ message: 'tag removed', data: response})
+const updateCustomTag = async (req, res) => {
+    await User.findOneAndUpdate({ _id: req.user }, { $pull: { customTags: req.body.oldTag } }, { useFindAndModify: false })
+        .then(() => {
+            User.findOneAndUpdate({ _id: req.user }, { $push: { customTags: req.body.tag } }, { useFindAndModify: true })
+                .then(() => {
+                    return res.status(200).json({ message: 'Tag updated' })
+                })
+                .catch(err => {
+                    return res.status(400).json(err)
+                })
         })
-        .catch(error => {
-            return res.status(400).json(error)
-        })
-
+        .catch(err => {
+            return res.status(400).json(err)
+    })
 }
 
 module.exports = {
     createNote, myNotes, noteDetails, deleteNote,
     updateNote, bulkDeleteNote, addCustomTag,
-    setUnsetArchiveStatus, deleteLabel, editNoteWithExistingLabel, removeSingleNoteTag, colorUpdate, removeCustomTags
+    setUnsetArchiveStatus, deleteLabel, editNoteWithExistingLabel, removeSingleNoteTag, colorUpdate, updateCustomTag
 }
