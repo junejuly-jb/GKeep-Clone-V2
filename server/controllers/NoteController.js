@@ -117,10 +117,26 @@ const setUnsetArchiveStatus = async (req, res) => {
 
 const deleteLabel = async (req, res) => {
 
-    await User.updateOne({ _id: req.user }, { $pullAll: { customTags: [req.body.tag] } }, (err, doc) => {
-        if (err) return res.status(400).json(err)
-        return res.status(200).json(doc)
-    })
+     await User.updateOne({ _id: req.user }, { $pullAll: { customTags: [req.body.tag] } })
+        .then(() => {
+            User.findOne({ _id: req.user })
+                .then(document => {
+                    // document.note.tags[].splice(req.body.index, 1)
+                    // document.save()
+                    // return res.status(200).json(document.notes[1].tags)
+                    
+                    for (let i = 0; i < document.notes.length; i++){
+                        
+                        let result = document.notes[i].tags.filter(tag => tag != req.body.tag)
+                        document.notes[i].tags = []
+                        document.notes[i].tags = result.concat(document.notes[i].tags)
+                        
+                    }
+                    document.save()
+                    return res.status(200).json('success')
+                    
+            })
+        })
 
 }
 
