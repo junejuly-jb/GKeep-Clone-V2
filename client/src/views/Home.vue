@@ -587,7 +587,7 @@
                         <span v-else>{{ label }}</span>
                         <div class="ml-auto">
                             <v-btn small fab icon @click="btnDeleteLabel(label, i)"><v-icon>mdi-trash-can</v-icon></v-btn>
-                            <v-btn v-if="labelEditMode === true && editedIndex == i" small fab icon @click="labelToggler(i)"><v-icon>mdi-check</v-icon></v-btn>
+                            <v-btn v-if="labelEditMode === true && editedIndex == i" small fab icon @click="updateLabel(label, i)"><v-icon>mdi-check</v-icon></v-btn>
                             <v-btn v-else small fab icon @click="labelToggler(i)"><v-icon>mdi-pencil</v-icon></v-btn>
                         </div>
                     </div>
@@ -907,10 +907,14 @@ export default {
 
 
         labelToggler(i){
-            this.labelEditMode = !this.labelEditMode
+            this.labelEditMode = true
             this.editedIndex = i
         },
 
+        updateLabel(label, i){
+            console.log(label, i)
+            this.labelEditMode = false
+        },
 
         async onAddLabelClick(){
             await this.$http.post('http://localhost:3000/api/addCustomTag', { tag: this.addLabel }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
