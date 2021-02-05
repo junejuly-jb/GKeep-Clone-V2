@@ -162,8 +162,20 @@ const colorUpdate = async (req, res) => {
 
 }
 
+const removeCustomTags = async (req, res) => {
+    
+    await User.findOneAndUpdate({ _id: req.user }, { $pull: { customTags: req.body.tag } }, {useFindAndModify: false})
+        .then(response => {
+            return res.status(200).json({ message: 'tag removed', data: response})
+        })
+        .catch(error => {
+            return res.status(400).json(error)
+        })
+
+}
+
 module.exports = {
     createNote, myNotes, noteDetails, deleteNote,
     updateNote, bulkDeleteNote, addCustomTag,
-    setUnsetArchiveStatus, deleteLabel, editNoteWithExistingLabel, removeSingleNoteTag, colorUpdate
+    setUnsetArchiveStatus, deleteLabel, editNoteWithExistingLabel, removeSingleNoteTag, colorUpdate, removeCustomTags
 }
