@@ -177,18 +177,42 @@ const colorUpdate = async (req, res) => {
 }
 
 const updateCustomTag = async (req, res) => {
-    await User.findOneAndUpdate({ _id: req.user }, { $pull: { customTags: req.body.oldTag } }, { useFindAndModify: false })
+    // await User.updateOne({ _id: req.user }, { $pull: { customTags: req.body.oldTag } })
+    //     .then(() => {
+    //         User.updateOne({ _id: req.user }, { $push: { customTags: req.body.tag } })
+    //             .then(() => {
+    //                 User.findOne({ _id: req.user })
+    //                 .then(document => {
+                        
+    //                     // console.log(doc.notes)
+    //                     for (let i = 0; i < document.notes.length; i++){
+    //                         let index = document.notes[i].tags.indexOf(req.body.oldTag)
+    //                         document.notes[i].tags[index] = req.body.tag
+                        
+    //                     }
+    //                     // document.markModified('document')
+    //                     document.save()
+    //                     console.log(document.notes)
+    //                     return res.status(200).json({ message: 'Tag updated' })
+    //                 })
+    //             })
+    //     })
+
+    await User.updateOne({ _id: req.user }, { $pull: { customTags: req.body.oldTag } })
         .then(() => {
-            User.findOneAndUpdate({ _id: req.user }, { $push: { customTags: req.body.tag } }, { useFindAndModify: true })
-                .then(() => {
-                    return res.status(200).json({ message: 'Tag updated' })
-                })
-                .catch(err => {
-                    return res.status(400).json(err)
-                })
-        })
-        .catch(err => {
-            return res.status(400).json(err)
+            User.findOne({ _id: req.user })
+            .then(record => {
+                record.customTags.push(req.body.tag)
+                
+                for (let i = 0; i < record.notes.length; i++){
+                    let index = record.notes[i].tags.indexOf(req.body.oldTag)
+                    record.notes[i].tags[index] = req.body.tag
+                }
+                record.markModified('notes')
+                record.save()
+                return res.status(200).json({ message: 'Tag updated' })
+                
+            })
     })
 }
 

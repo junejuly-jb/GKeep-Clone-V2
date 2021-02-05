@@ -906,7 +906,10 @@ export default {
                 this.msg = err.body.message
                 this.snackbar = true
             })
-            .finally( () => { this.labels.splice(i, 1) })
+            .finally( () => { 
+                this.labels.splice(i, 1)
+                this.notes()
+            })
         },
 
 
@@ -938,6 +941,7 @@ export default {
                 .finally( () => {
                     this.labels[i] = this.editLabelValue
                     this.labelEditMode = false
+                    this.notes()
                 })
             }
         },
