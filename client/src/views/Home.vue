@@ -582,13 +582,15 @@
                         <v-btn fab icon small @click="onAddLabelClick"><v-icon>mdi-check</v-icon></v-btn>
                     </div>
                     <div class="d-flex align-center py-2" v-for="(label, i) in labels" :key="i">
-                        <span class="pr-4"><v-icon>mdi-label</v-icon></span>
-                        <v-text-field v-if="labelEditMode === true && editedIndex == i" :value="label"></v-text-field>
+                        <span v-if="labelEditMode === true && editedIndex == i" class="pr-4" color="red"><v-btn icon @click="labelEditMode = false"><v-icon >mdi-close</v-icon></v-btn></span>
+                        <span v-else class="pr-4"><v-icon>mdi-label</v-icon></span>
+                        
+                        <v-text-field v-if="labelEditMode === true && editedIndex == i" v-model="editLabelValue"></v-text-field>
                         <span v-else>{{ label }}</span>
                         <div class="ml-auto">
                             <v-btn small fab icon @click="btnDeleteLabel(label, i)"><v-icon>mdi-trash-can</v-icon></v-btn>
-                            <v-btn v-if="labelEditMode === true && editedIndex == i" small fab icon @click="updateLabel(label, i)"><v-icon>mdi-check</v-icon></v-btn>
-                            <v-btn v-else small fab icon @click="labelToggler(i)"><v-icon>mdi-pencil</v-icon></v-btn>
+                            <v-btn v-if="labelEditMode === true && editedIndex == i" small fab icon @click="updateLabel(i)"><v-icon>mdi-check</v-icon></v-btn>
+                            <v-btn v-else small fab icon @click="labelToggler(label, i)"><v-icon>mdi-pencil</v-icon></v-btn>
                         </div>
                     </div>
                 </div>
@@ -732,6 +734,8 @@ export default {
         myNotes: [],
         addLabelDialog: false,
         selectedLabel: [],
+        oldLabelValue: '',
+        editLabelValue: '',
 
         //user
         userInfo: '',
@@ -906,14 +910,36 @@ export default {
         },
 
 
-        labelToggler(i){
+        labelToggler(label, i){
+            this.oldLabelValue = label
+            this.editLabelValue = this.oldLabelValue
             this.labelEditMode = true
             this.editedIndex = i
+
+            console.log(this.oldLabelValue)
         },
 
-        updateLabel(label, i){
-            console.log(label, i)
-            this.labelEditMode = false
+        async updateLabel(i){
+            console.log(this.oldLabelValue, this.editLabelValue)
+            if(this.oldLabelValue === this.editLabelValue){
+                this.snackbar = true
+                this.msg = 'updated'
+            }
+            else{
+                await this.$http.post('http://localhost:3000/api/update-tag', { oldTag: this.oldLabelValue, tag: this.editLabelValue }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+                .then( res => {
+                    this.snackbar = true
+                    this.msg = res.body.message
+                })
+                .catch( err => {
+                    this.snackbar = true
+                    this.msg = err.body.message
+                })
+                .finally( () => {
+                    this.labels[i] = this.editLabelValue
+                    this.labelEditMode = false
+                })
+            }
         },
 
         async onAddLabelClick(){
