@@ -82,8 +82,17 @@ export default {
         }
     },
     methods:{
-        update(){
-            
+        async update(){
+            this.$http.put('http://localhost:3000/api/updateNote/' + this.updateSelectedNote._id, {
+                title: this.title,
+                content: this.content
+            }, {
+                headers: { Authorization: 'Bearer ' + this.$auth.getToken() }
+            })
+            .then( () => {
+                this.$emit('updateSuccess')
+            })
+            .catch( err => { this.$emit('updateError', err)})
         }
     },
     mounted(){
