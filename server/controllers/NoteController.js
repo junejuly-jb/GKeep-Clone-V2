@@ -1,5 +1,7 @@
 const User = require('../model/User')
 const { noteValidation } = require('../validation')
+const notifier = require('node-notifier');
+
 
 const createNote = (req, res) => { 
 
@@ -28,8 +30,14 @@ const myNotes = async (req, res) => {
     User.findOne({ _id: req.user })
 
         .then(response => {
-
+            // notifier.notify('Message'); 
+            notifier.notify({
+                title: 'Sample',
+                message: 'Hello, there! Im a sample notification'
+            }); 
             return res.status(200).json(response.notes)
+            // String
+            
 
         })
 
