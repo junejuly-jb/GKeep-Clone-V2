@@ -290,7 +290,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note, index)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Edit</span>
                                             </v-tooltip>
@@ -701,19 +701,22 @@
             @success="onSuccessNoteColor"
             @error="onErrorNoteColor"
             />
+            <EditNoteDialog :toggleEditDialog="showEditDialog" @closeEditModal="showEditDialog = false"/>
     </v-app>
 </template>
 <script>
 import Archive from '../components/Archive.vue'
 import ColorPickerDialog from '../components/ColorPickerDialog.vue'
+import EditNoteDialog from '../components/EditNoteDialog.vue'
 export default {
     name: 'Home',
     components: {
-        Archive, ColorPickerDialog
+        Archive, ColorPickerDialog, EditNoteDialog
     },
     data: () => ({
 
         showColorPickerDialog: false,
+        showEditDialog: false,
         drawer: true,
         dialog: false,
         sesh_err: '',
@@ -769,6 +772,11 @@ export default {
 
     }),
     methods: {
+        btnToggleEditDialog(note, index){
+            console.log('note', note)
+            console.log('index: ', index)
+            this.showEditDialog = true
+        },
         btnTrashArchiveFunc: function(value){
             this.confirmDeleteDialog = true
             this.delSelectedNoteIndex = value.index
