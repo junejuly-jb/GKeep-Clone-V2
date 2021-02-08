@@ -241,9 +241,12 @@
                     </v-card>
                 </div>
 
+            <div style="padding: 0px 7%" v-show="isLoading">
+                <Loader/>
+            </div>
 
             <!-- FOR GRID VIEW  (NOT FILTERING)-->
-            <div style="padding: 0px 7%" v-show="!listView && !filtering && !archiveStatus">
+            <div style="padding: 0px 7%" v-show="!listView && !filtering && !archiveStatus && !isLoading">
                 <masonry
                     :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
                     :gutter="{default: '30px', 700: '10px'}"
@@ -290,7 +293,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note, index)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Edit</span>
                                             </v-tooltip>
@@ -320,7 +323,7 @@
 
             <!-- FOR GRID VIEW (FILTERING) -->
 
-            <div style="padding: 0px 7%" v-show="!listView && filtering && !archiveStatus">
+            <div style="padding: 0px 7%" v-show="!listView && filtering && !archiveStatus && !isLoading">
                 <masonry
                     :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
                     :gutter="{default: '30px', 700: '10px'}"
@@ -365,7 +368,7 @@
                                         <div>
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
                                                 </template>
                                                 <span>Edit</span>
                                             </v-tooltip>
@@ -395,7 +398,7 @@
 
 
             <!-- FOR LIST VIEW  (NOT FILTERING)-->
-            <div style="padding: 0px 7%" v-show="listView && !filtering && !archiveStatus">
+            <div style="padding: 0px 7%" v-show="listView && !filtering && !archiveStatus && !isLoading">
                 <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
                     <v-card outlined :color="note.color === 'default' ? '' : note.color">
                         <v-container>
@@ -436,7 +439,7 @@
                                 <div>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
                                         </template>
                                         <span>Edit</span>
                                     </v-tooltip>
@@ -464,7 +467,7 @@
             </div>
 
             <!-- FOR LIST VIEW (FILTERING) -->
-            <div style="padding: 0px 7%" v-show="listView && filtering && !archiveStatus">
+            <div style="padding: 0px 7%" v-show="listView && filtering && !archiveStatus && !isLoading">
                 <div v-for="(note, index) in filteredNotes" :key="index" class="mt-5">
                     <v-card outlined :color="note.color === 'default' ? '' : note.color">
                         <v-container>
@@ -505,7 +508,7 @@
                                 <div>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
                                         </template>
                                         <span>Edit</span>
                                     </v-tooltip>
@@ -716,13 +719,16 @@
 import Archive from '../components/Archive.vue'
 import ColorPickerDialog from '../components/ColorPickerDialog.vue'
 import EditNoteDialog from '../components/EditNoteDialog.vue'
+import Loader from '../components/Loader.vue'
 export default {
     name: 'Home',
     components: {
-        Archive, ColorPickerDialog, EditNoteDialog
+        Archive, ColorPickerDialog, EditNoteDialog,
+        Loader
     },
     data: () => ({
 
+        isLoading: false,
         showColorPickerDialog: false,
         showEditDialog: false,
         drawer: true,
@@ -796,12 +802,9 @@ export default {
             this.msg = 'updated successfully'
             this.snackbar = true
         },
-        btnToggleEditDialog(note, index){
-            console.log('index: ', index)
+        btnToggleEditDialog(note){
             this.showEditDialog = true
             this.updateSelectedNote = note
-            console.log('note', this.updateSelectedNote)
-
         },
         btnTrashArchiveFunc: function(value){
             this.confirmDeleteDialog = true
@@ -865,7 +868,6 @@ export default {
             .finally( () => note.tags.splice(i, 1))
         },
         async btnUpdateExistingTag(){
-            console.log(this.selectedLabel)
             await this.$http.post('http://localhost:3000/api/editNoteWithExistingLabel', { id: this.selected_noteId, tags: this.selectedLabel},
              { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
                 .then( (res) => {
@@ -891,10 +893,10 @@ export default {
             this.addLabelDialog = true
             this.selectedLabel = note.tags.slice()
             this.selected_noteId = note._id
-            console.log('selected:', this.selectedLabel)
             this.selected_index = i
         },
         async notes(){
+            this.isLoading = true
             await this.$http.get('http://localhost:3000/api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( (response) => {
                 this.myNotes = response.body.filter( note => {
@@ -903,13 +905,17 @@ export default {
                 this.myArchiveNotes = response.body.filter( notes => {
                     return notes.archive == true
                 })
-                console.log(this.myNotes)
             })
             .catch( err => {
                 if(err.status == 401){
                     this.dialog = true,
                     this.sesh_err = err.body.message
                 }
+            })
+            .finally(() => {
+               setTimeout( () => {
+                this.isLoading = false
+               }, 2000)
             })
         },
         logout(){
@@ -1042,7 +1048,6 @@ export default {
                 }
             })
             .then(( res ) => {
-                console.log(res.body)
                 this.snackbar = true
                 this.msg = res.body
             })
