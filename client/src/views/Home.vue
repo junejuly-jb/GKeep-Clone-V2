@@ -245,6 +245,7 @@
                 <Loader/>
             </div>
 
+            
             <!-- FOR GRID VIEW  (NOT FILTERING)-->
             <div style="padding: 0px 7%" v-show="!listView && !filtering && !archiveStatus && !isLoading">
                 <masonry
@@ -756,7 +757,6 @@ export default {
 
         //user
         userInfo: '',
-
         // others
         darkModeSwitch: false,
         closeOnContentClick: false,
@@ -783,9 +783,10 @@ export default {
         myArchiveNotes: [],
         note_color: '',
         note_colorID: '',
-        colorEdit_selectedNote: {}
-
+        colorEdit_selectedNote: {},
+    
     }),
+    
     methods: {
         errorUpdating(value){
             if(value.status == 401){
