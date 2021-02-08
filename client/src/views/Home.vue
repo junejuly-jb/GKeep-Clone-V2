@@ -707,6 +707,8 @@
             @closeEditModal="showEditDialog = false"
             @updateTitle="updateSelectedNote.title = $event"
             @updateContent="updateSelectedNote.content = $event"
+            @updateSuccess="updated"
+            @updateError="errorUpdating"
             />
     </v-app>
 </template>
@@ -779,6 +781,21 @@ export default {
 
     }),
     methods: {
+        errorUpdating(value){
+            if(value.status == 401){
+                this.dialog = true,
+                this.sesh_err = value.body.message
+            }
+            else{
+                this.snackbar = true
+                this.message = value.body.message
+            }
+        },
+        updated(){
+            this.showEditDialog = false
+            this.msg = 'updated successfully'
+            this.snackbar = true
+        },
         btnToggleEditDialog(note, index){
             console.log('index: ', index)
             this.showEditDialog = true
