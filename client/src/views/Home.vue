@@ -701,7 +701,13 @@
             @success="onSuccessNoteColor"
             @error="onErrorNoteColor"
             />
-            <EditNoteDialog :toggleEditDialog="showEditDialog" @closeEditModal="showEditDialog = false"/>
+            <EditNoteDialog 
+            :updateSelectedNote="updateSelectedNote" 
+            :toggleEditDialog="showEditDialog" 
+            @closeEditModal="showEditDialog = false"
+            @updateTitle="updateSelectedNote.title = $event"
+            @updateContent="updateSelectedNote.content = $event"
+            />
     </v-app>
 </template>
 <script>
@@ -754,6 +760,7 @@ export default {
         delSelectedNoteIndex: -1,
         delSelectedNoteId: null,
         delSelectedNote: {},
+        updateSelectedNote: "",
         confirmDeleteDialog: false,
         newNote: {
             title: '',
@@ -773,9 +780,11 @@ export default {
     }),
     methods: {
         btnToggleEditDialog(note, index){
-            console.log('note', note)
             console.log('index: ', index)
             this.showEditDialog = true
+            this.updateSelectedNote = note
+            console.log('note', this.updateSelectedNote)
+
         },
         btnTrashArchiveFunc: function(value){
             this.confirmDeleteDialog = true

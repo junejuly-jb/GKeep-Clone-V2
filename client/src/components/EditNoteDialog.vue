@@ -15,12 +15,13 @@
                     label="Title"
                     outlined
                     dense
+                    v-model="title"
                 ></v-text-field>
                 <v-textarea
                 outlined
                 name="input-7-4"
                 label="Note"
-                value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
+                v-model="content"
                 ></v-textarea>
             </div>
         </v-card-text>
@@ -35,7 +36,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog = false"
+            @click="update"
           >
             Update
           </v-btn>
@@ -46,8 +47,12 @@
 </template>
 <script>
 export default {
-    props: ['toggleEditDialog'],
-
+    props: ['toggleEditDialog', 'updateSelectedNote'],
+    data: function(){
+        return{
+            
+        }
+    },
     computed: {
         editDialog: {
             get(){
@@ -58,7 +63,30 @@ export default {
                     this.$emit('closeEditModal')
                 }
             }
+        },
+        content:{
+            get(){
+                return this.updateSelectedNote.content
+            },
+            set(value){
+                this.$emit('updateContent', value)
+            }
+        },
+        title:{
+            get(){
+                return this.updateSelectedNote.title
+            },
+            set(value){
+                this.$emit('updateTitle', value)
+            }
         }
+    },
+    methods:{
+        update(){
+            
+        }
+    },
+    mounted(){
         
     }
 }
