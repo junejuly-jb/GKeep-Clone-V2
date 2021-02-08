@@ -217,7 +217,5 @@ const updateCustomTag = async (req, res) => {
 }
 
 module.exports = {
-    createNote, myNotes, noteDetails, deleteNote,
-    updateNote, bulkDeleteNote, addCustomTag,
-    setUnsetArchiveStatus, deleteLabel, editNoteWithExistingLabel, removeSingleNoteTag, colorUpdate, updateCustomTag
+    createNote, myNotes, noteDetails, deleteNote, updateNote, bulkDeleteNote, addCustomTag, setUnsetArchiveStatus, deleteLabel, editNoteWithExistingLabel, removeSingleNoteTag, colorUpdate, updateCustomTag
 }
