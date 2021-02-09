@@ -409,7 +409,7 @@
 
 
             <!-- FOR LIST VIEW  (NOT FILTERING)-->
-            <div style="padding: 0px 7%" v-show="listView && !filtering && !archiveStatus && !isLoading">
+            <div style="padding: 0px 20%" v-show="listView && !filtering && !archiveStatus && !isLoading">
                 <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
                     <v-card outlined :color="note.color === 'default' ? '' : note.color">
                         <v-container>
@@ -478,7 +478,7 @@
             </div>
 
             <!-- FOR LIST VIEW (FILTERING) -->
-            <div style="padding: 0px 7%" v-show="listView && filtering && !archiveStatus && !isLoading">
+            <div style="padding: 0px 20%" v-show="listView && filtering && !archiveStatus && !isLoading">
                 <div v-for="(note, index) in filteredNotes" :key="index" class="mt-5">
                     <v-card outlined :color="note.color === 'default' ? '' : note.color">
                         <v-container>
@@ -724,6 +724,17 @@
             @updateSuccess="updated"
             @updateError="errorUpdating"
             />
+
+            <div class="floating" v-show="selectionActive == true">
+                <v-btn
+                    color="red"
+                    dark
+                    fab
+                    @click="btndelete"
+                >
+                    <v-icon>mdi-trash-can-outline</v-icon>
+                </v-btn>
+            </div>
     </v-app>
 </template>
 <script>
@@ -738,7 +749,7 @@ export default {
         Loader
     },
     data: () => ({
-
+        selectionActive: true,
         isLoading: false,
         showColorPickerDialog: false,
         showEditDialog: false,
@@ -1146,6 +1157,14 @@ export default {
     }
     .border{
         border: 0.5px solid lightgray;
+    }
+
+    .floating{
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 99;
+        transition: 0.4s;
     }
 
 </style>
