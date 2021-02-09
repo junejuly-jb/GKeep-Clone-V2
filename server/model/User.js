@@ -44,6 +44,14 @@ const userSchema = new mongoose.Schema({
         max: 255,
         min: 6
     },
+    initials: {
+        type: String,
+        required: true
+    },
+    profile: {
+        type: Buffer,
+        required: false
+    },
     password: {
         type: String,
         required: true,

@@ -14,9 +14,23 @@ const register = async (req, res) => {
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(req.body.password, salt)
 
+    var name = req.body.name
+    var getInitials = function (name) {
+    var parts = name.split(' ')
+    var initials = ''
+        for (var i = 0; i < parts.length; i++) {
+            if (parts[i].length > 0 && parts[i] !== '') {
+                initials += parts[i][0]
+            }
+        }
+        return initials
+    }
+    var user_initials = getInitials(name);
+
     const user = new User({
         name: req.body.name,
         email: req.body.email,
+        initials: user_initials,
         password: hashedPassword,
         notes: []
     })
