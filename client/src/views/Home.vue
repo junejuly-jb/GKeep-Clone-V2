@@ -109,6 +109,7 @@
                     v-on="on"
                 >
                     <v-icon>mdi-dots-vertical</v-icon>
+                    
                 </v-btn>
                 </template>
 
@@ -118,10 +119,10 @@
                             <v-avatar
                             color="primary"
                             size="63"
-                            ><span class="white--text headline">JBA</span></v-avatar>
-                            <h3>June Aragoncillo</h3>
+                            ><span class="white--text headline">{{userInfo.initials}}</span></v-avatar>
+                            <h3>{{userInfo.name}}</h3>
                             <p class="caption mt-1">
-                                june@gmail.com
+                                {{userInfo.email}}
                             </p>
                         </div>
                     </v-list-item>
@@ -756,7 +757,7 @@ export default {
         editLabelValue: '',
 
         //user
-        userInfo: '',
+        userInfo: {},
         // others
         darkModeSwitch: false,
         closeOnContentClick: false,
@@ -927,6 +928,7 @@ export default {
         async user(){
             await this.$http.get('http://localhost:3000/api/userDetails', {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( res => {
+                this.userInfo = res.body[0]
                 this.labels = res.body[0].customTags
                 this.c_tag = res.body[0].customTags
             })
