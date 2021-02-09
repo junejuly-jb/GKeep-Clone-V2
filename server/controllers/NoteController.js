@@ -31,10 +31,10 @@ const myNotes = async (req, res) => {
 
         .then(response => {
             // notifier.notify('Message'); 
-            notifier.notify({
-                title: 'Sample',
-                message: 'Hello, there! Im a sample notification'
-            }); 
+            // notifier.notify({
+            //     title: 'Sample',
+            //     message: 'Hello, there! Im a sample notification'
+            // }); 
             return res.status(200).json(response.notes)
             // String
             

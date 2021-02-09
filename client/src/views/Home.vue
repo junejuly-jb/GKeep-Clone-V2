@@ -8,15 +8,24 @@
             <v-toolbar-title class="ml-3 mr-5">Google Keep CLONE</v-toolbar-title>
 
             <v-spacer></v-spacer>
-            
-            <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn v-bind="attrs" v-on="on" icon>
-                        <v-icon>mdi-refresh</v-icon>
-                    </v-btn>
-                </template>
-                <span>Refresh</span>
-            </v-tooltip>
+            <div v-if="isLoading == false">
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn @click="notes" v-bind="attrs" v-on="on" icon>
+                            <v-icon>mdi-refresh</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Refresh</span>
+                </v-tooltip>
+            </div>
+            <div v-else class="mx-3">
+                <v-progress-circular
+                :size="20"
+                :width="2"
+                color="amber"
+                indeterminate
+                ></v-progress-circular>
+            </div>
             <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn v-bind="attrs" v-on="on" icon v-show="!listView" @click="onClickListToggler(true)">
@@ -917,7 +926,7 @@ export default {
             .finally(() => {
                setTimeout( () => {
                 this.isLoading = false
-               }, 2000)
+               }, 2500)
             })
         },
         logout(){
