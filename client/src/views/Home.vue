@@ -268,7 +268,8 @@
                             >
                                 <v-container>
                                     <div class="float-right">
-                                        <v-icon small>mdi-circle-outline</v-icon>
+                                        <v-icon small @click="select(note)" v-if="note.selected == false">mdi-circle-outline</v-icon>
+                                        <v-icon small @click="deselect(note)" color="blue darken-1" v-else>mdi-checkbox-marked-circle</v-icon>
                                     </div>
                                     <div class="py-2"><h5>{{ note.title }}</h5></div>
                                     <p>{{ note.content }}</p>
@@ -343,7 +344,7 @@
                             <v-card outlined :color="note.color === 'default' ? '' : note.color">
                                 <v-container>
                                     <div class="float-right">
-                                        <v-icon small>mdi-circle-outline</v-icon>
+                                        <v-icon small @click="select(note)">mdi-circle-outline</v-icon>
                                     </div>
                                     <div class="py-2"><h5>{{ note.title }}</h5></div>
                                     <p>{{ note.content }}</p>
@@ -730,7 +731,7 @@
                     color="red"
                     dark
                     fab
-                    @click="btndelete"
+                    
                 >
                     <v-icon>mdi-trash-can-outline</v-icon>
                 </v-btn>
@@ -749,7 +750,7 @@ export default {
         Loader
     },
     data: () => ({
-        selectionActive: true,
+        selectionActive: false,
         isLoading: false,
         showColorPickerDialog: false,
         showEditDialog: false,
@@ -809,6 +810,13 @@ export default {
     }),
     
     methods: {
+
+        select(note){
+            note.selected = true
+        },
+        deselect(note){
+            note.selected = false
+        },
         errorUpdating(value){
             if(value.status == 401){
                 this.dialog = true,
