@@ -21,6 +21,10 @@ const noteSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    selected: {
+        type: Boolean,
+        default: false
+    },
     tags: Array,
     archive: {
         type: Boolean,
