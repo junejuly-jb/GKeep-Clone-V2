@@ -806,16 +806,21 @@ export default {
         note_color: '',
         note_colorID: '',
         colorEdit_selectedNote: {},
+        ids: []
     
     }),
     
     methods: {
 
         select(note){
+            this.selectionActive = true
             note.selected = true
+            this.ids.push(note._id)
         },
         deselect(note){
             note.selected = false
+            this.ids.splice(this.ids.indexOf(note._id), 1)
+            this.selectionActive = this.ids.length == 0 ? false : true
         },
         errorUpdating(value){
             if(value.status == 401){
