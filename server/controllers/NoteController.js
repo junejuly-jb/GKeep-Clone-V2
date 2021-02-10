@@ -14,11 +14,11 @@ const createNote = (req, res) => {
         tags: req.body.tags
     }
 
-    User.findOneAndUpdate({ _id: req.user._id }, { $push: { notes: newNote } }, { returnOriginal: false, useFindAndModify: false },
+    User.findOneAndUpdate({ _id: req.user._id }, { $push: { notes: { $each: [newNote], $position: 0 } } }, { returnOriginal: false, useFindAndModify: false },
         (err, doc) => {
             if (err) return res.status(500).send(err)
 
-            const latest_note = doc.notes.splice(-1)[0]
+            const latest_note = doc.notes[0]
             return res.status(200).json({ message: 'Note added', data: latest_note})
     })
 

@@ -827,8 +827,12 @@ export default {
             this.snackbar = true
             this.msg = "Notes deleted successfully"
             this.notes()
+            this.selectionActive = false
+            this.ids = []
         },
         errorBulk(value){
+            this.selectionActive = false
+            this.ids = []
             if(value.status == 401){
                 this.dialog = true,
                 this.sesh_err = value.body.message
@@ -1138,7 +1142,7 @@ export default {
                 }
             })
             .then( res => {
-                this.myNotes.push(res.body.data)
+                this.myNotes.unshift(res.body.data)
                 this.snackbar = true
                 this.msg = res.body.message
                 this.typingMode = false
