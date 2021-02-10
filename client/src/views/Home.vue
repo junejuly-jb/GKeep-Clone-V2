@@ -731,7 +731,7 @@
                     color="red"
                     dark
                     fab
-                    
+                    @click="bulkDelete"
                 >
                     <v-icon>mdi-trash-can-outline</v-icon>
                 </v-btn>
@@ -811,7 +811,30 @@ export default {
     }),
     
     methods: {
-
+        async bulkDelete(){
+            await this.$http.post('http://localhost:3000/api/bulkDeleteNote', { noteId: this.ids }, {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                this.msg = res.body.message
+                this.snackbar = true
+            })
+            .catch( err => {
+                if(err.status == 401){
+                    this.dialog = true,
+                    this.sesh_err = err.body.message
+                }
+                else{
+                    this.msg = err.body.message
+                    this.snackbar = true
+                }
+            })
+            .finally( () => {
+                this.notes()
+            })
+        },
         select(note){
             this.selectionActive = true
             note.selected = true
