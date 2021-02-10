@@ -725,7 +725,17 @@
             @updateSuccess="updated"
             @updateError="errorUpdating"
             />
-
+            <!-- <BulkDeleteDialog
+            :ids="ids"
+            :bulkDialog="bulkDialog"
+            @show="bulkDialog = false"
+            /> -->
+            <BulkDeleteDialog 
+            :ids="ids" 
+            :bulkDialog="bulkDialog" 
+            @show="bulkDialog=false" 
+            @onSuccessBulkDelete="successBulk"
+            @onErrorBulkDelete="errorBulk" />
             <div class="floating" v-show="selectionActive == true">
                 <v-btn
                     color="red"
@@ -743,11 +753,12 @@ import Archive from '../components/Archive.vue'
 import ColorPickerDialog from '../components/ColorPickerDialog.vue'
 import EditNoteDialog from '../components/EditNoteDialog.vue'
 import Loader from '../components/Loader.vue'
+import BulkDeleteDialog from '../components/BulkDeleteDialog.vue'
 export default {
     name: 'Home',
     components: {
         Archive, ColorPickerDialog, EditNoteDialog,
-        Loader
+        Loader, BulkDeleteDialog
     },
     data: () => ({
         selectionActive: false,
@@ -806,34 +817,29 @@ export default {
         note_color: '',
         note_colorID: '',
         colorEdit_selectedNote: {},
-        ids: []
+        ids: [],
+        bulkDialog: false
     
     }),
     
     methods: {
-        async bulkDelete(){
-            await this.$http.post('http://localhost:3000/api/bulkDeleteNote', { noteId: this.ids }, {
-                headers: {
-                    Authorization: 'Bearer ' + this.$auth.getToken()
-                }
-            })
-            .then((res) => {
-                this.msg = res.body.message
+        successBulk(){
+            this.snackbar = true
+            this.msg = "Notes deleted successfully"
+            this.notes()
+        },
+        errorBulk(value){
+            if(value.status == 401){
+                this.dialog = true,
+                this.sesh_err = value.body.message
+            }
+            else{
                 this.snackbar = true
-            })
-            .catch( err => {
-                if(err.status == 401){
-                    this.dialog = true,
-                    this.sesh_err = err.body.message
-                }
-                else{
-                    this.msg = err.body.message
-                    this.snackbar = true
-                }
-            })
-            .finally( () => {
-                this.notes()
-            })
+                this.message = value.body.message
+            }
+        },
+        async bulkDelete(){
+            this.bulkDialog = true
         },
         select(note){
             this.selectionActive = true
