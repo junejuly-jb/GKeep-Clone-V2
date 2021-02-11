@@ -353,10 +353,14 @@
                     :gutter="{default: '30px', 700: '10px'}"
                     >
                         <div v-for="(note, index) in filteredNotes" :key="index" class="mt-5">
-                            <v-card outlined :color="note.color === 'default' ? '' : note.color">
+                            <v-card 
+                            outlined :color="note.color === 'default' ? '' : note.color" :elevation=" note.selected == true ? 8 : 0"
+                            
+                            >
                                 <v-container>
                                     <div class="float-right">
-                                        <v-icon small @click="select(note)">mdi-circle-outline</v-icon>
+                                        <v-icon @click="select(note)" v-if="note.selected == false" small>mdi-circle-outline</v-icon>
+                                        <v-icon @click="deselect(note)" color="blue darken-1" v-else small>mdi-checkbox-marked-circle</v-icon>
                                     </div>
                                     <div class="py-2"><h5>{{ note.title }}</h5></div>
                                     <p>{{ note.content }}</p>
@@ -373,46 +377,52 @@
                                         </v-chip>
                                     </div>
                                     <div class="d-flex">
-                                        <div>
-                                            <v-tooltip bottom>
-                                                <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
-                                                </template>
-                                                <span>Add tag</span>
-                                            </v-tooltip>
-                                        </div>
-                                        <div>
-                                            <v-tooltip bottom>
-                                                <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
-                                                </template>
-                                                <span>Delete</span>
-                                            </v-tooltip>
-                                        </div>
-                                        <div>
-                                            <v-tooltip bottom>
-                                                <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
-                                                </template>
-                                                <span>Edit</span>
-                                            </v-tooltip>
-                                        </div>
-                                        <div>
-                                            <v-tooltip bottom>
-                                                <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
-                                                </template>
-                                                <span>Archive</span>
-                                            </v-tooltip>
-                                        </div>
-                                        <div>
-                                            <v-tooltip bottom>
-                                                <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
-                                                </template>
-                                                <span>Color</span>
-                                            </v-tooltip>
-                                        </div>
+                                        
+                                            <div>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn :disabled="selectionActive && note.selected == true" x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                                    </template>
+                                                    <span>Add tag</span>
+                                                </v-tooltip>
+                                            </div>
+                                       
+                                            <div>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                                    </template>
+                                                    <span>Delete</span>
+                                                </v-tooltip>
+                                            </div>
+                                        
+                                            <div>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                                    </template>
+                                                    <span>Edit</span>
+                                                </v-tooltip>
+                                            </div>
+                                        
+                                            <div>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                                    </template>
+                                                    <span>Archive</span>
+                                                </v-tooltip>
+                                            </div>
+                                        
+                                            <div>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn :disabled="selectionActive && note.selected == true" @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                                    </template>
+                                                    <span>Color</span>
+                                                </v-tooltip>
+                                            </div>
+                                        
                                     </div>
                                 </v-container>
                             </v-card>
@@ -424,10 +434,13 @@
             <!-- FOR LIST VIEW  (NOT FILTERING)-->
             <div style="padding: 0px 20%" v-show="listView && !filtering && !archiveStatus && !isLoading">
                 <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
-                    <v-card outlined :color="note.color === 'default' ? '' : note.color">
+                    <v-card 
+                    outlined :color="note.color === 'default' ? '' : note.color" :elevation=" note.selected == true ? 8 : 0"
+                    >
                         <v-container>
                             <div class="float-right">
-                                <v-icon small>mdi-circle-outline</v-icon>
+                                <v-icon @click="select(note)" v-if="note.selected == false" small>mdi-circle-outline</v-icon>
+                                <v-icon @click="deselect(note)" color="blue darken-1" v-else small>mdi-checkbox-marked-circle</v-icon>
                             </div>
                             <div class="py-2"><h5>{{ note.title }}</h5></div>
                             <p>{{ note.content }}</p>
@@ -444,47 +457,53 @@
                                 </v-chip>
                             </div>
                             <div class="d-flex">
-                                <div>
-                                    <v-tooltip bottom>
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
-                                        </template>
-                                        <span>Add tag</span>
-                                    </v-tooltip>
-                                </div>
-                                <div>
-                                    <v-tooltip bottom>
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
-                                        </template>
-                                        <span>Delete</span>
-                                    </v-tooltip>
-                                </div>
-                                <div>
-                                    <v-tooltip bottom>
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
-                                        </template>
-                                        <span>Edit</span>
-                                    </v-tooltip>
-                                </div>
-                                <div>
-                                    <v-tooltip bottom>
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
-                                        </template>
-                                        <span>Archive</span>
-                                    </v-tooltip>
-                                </div>
-                                <div>
-                                    <v-tooltip bottom>
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-btn @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
-                                        </template>
-                                        <span>Color</span>
-                                    </v-tooltip>
-                                </div>
-                            </div>
+                                        
+                                            <div>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn :disabled="selectionActive && note.selected == true" x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                                    </template>
+                                                    <span>Add tag</span>
+                                                </v-tooltip>
+                                            </div>
+                                       
+                                            <div>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                                    </template>
+                                                    <span>Delete</span>
+                                                </v-tooltip>
+                                            </div>
+                                        
+                                            <div>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                                    </template>
+                                                    <span>Edit</span>
+                                                </v-tooltip>
+                                            </div>
+                                        
+                                            <div>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                                    </template>
+                                                    <span>Archive</span>
+                                                </v-tooltip>
+                                            </div>
+                                        
+                                            <div>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn :disabled="selectionActive && note.selected == true" @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                                    </template>
+                                                    <span>Color</span>
+                                                </v-tooltip>
+                                            </div>
+                                        
+                                    </div>
                         </v-container>
                     </v-card>
                 </div>
@@ -493,10 +512,13 @@
             <!-- FOR LIST VIEW (FILTERING) -->
             <div style="padding: 0px 20%" v-show="listView && filtering && !archiveStatus && !isLoading">
                 <div v-for="(note, index) in filteredNotes" :key="index" class="mt-5">
-                    <v-card outlined :color="note.color === 'default' ? '' : note.color">
+                    <v-card 
+                        outlined :color="note.color === 'default' ? '' : note.color" :elevation=" note.selected == true ? 8 : 0"
+                        >
                         <v-container>
                             <div class="float-right">
-                                <v-icon small>mdi-circle-outline</v-icon>
+                                <v-icon @click="select(note)" v-if="note.selected == false" small>mdi-circle-outline</v-icon>
+                                <v-icon @click="deselect(note)" color="blue darken-1" v-else small>mdi-checkbox-marked-circle</v-icon>
                             </div>
                             <div class="py-2"><h5>{{ note.title }}</h5></div>
                             <p>{{ note.content }}</p>
@@ -516,44 +538,49 @@
                                 <div>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                            <v-btn :disabled="selectionActive && note.selected == true" x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
                                         </template>
                                         <span>Add tag</span>
                                     </v-tooltip>
                                 </div>
+                            
                                 <div>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                            <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                                         </template>
                                         <span>Delete</span>
                                     </v-tooltip>
                                 </div>
+                            
                                 <div>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                            <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
                                         </template>
                                         <span>Edit</span>
                                     </v-tooltip>
                                 </div>
+                            
                                 <div>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                            <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
                                         </template>
                                         <span>Archive</span>
                                     </v-tooltip>
                                 </div>
+                            
                                 <div>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-btn @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                            <v-btn :disabled="selectionActive && note.selected == true" @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
                                         </template>
                                         <span>Color</span>
                                     </v-tooltip>
                                 </div>
-                            </div>
+                            
+                        </div>
                         </v-container>
                     </v-card>
                 </div>
@@ -858,23 +885,25 @@ export default {
             for(let i = 0; i < this.myNotes.length; i++){
                 this.myNotes[i].selected = false
             }
-
-            console.log(this.ids)
             this.selectionActive = false
         },
         selectAll(){
             this.ids = []
-            // console.log(this.myNotes.length)
+            
             for(let i = 0; i < this.myNotes.length; i++){
                 this.myNotes[i].selected = true
                 this.ids.push(this.myNotes[i]._id)
             }
-            console.log(this.ids)
+            
         },
         successBulk(){
+            // this.filteredNotes = []
             this.snackbar = true
+            this.myNotes = this.myNotes.filter( note => !this.ids.includes(note._id))
+            if(this.filteredNotes.length != 0){
+                this.filteredNotes = this.filteredNotes.filter( note => !this.ids.includes(note._id))
+            }
             this.msg = "Notes deleted successfully"
-            this.notes()
             this.selectionActive = false
             this.ids = []
         },

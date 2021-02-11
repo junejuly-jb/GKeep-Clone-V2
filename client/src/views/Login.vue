@@ -105,7 +105,5 @@ export default {
     .sub{
         padding: 0px 0px 60px 0px;
     }
-    .pointer{
-        cursor: pointer;
-    }
+    
 </style>
