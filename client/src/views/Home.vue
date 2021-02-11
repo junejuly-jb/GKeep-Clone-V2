@@ -20,7 +20,7 @@
                 <div v-show="!isLoading">
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn  @click="notes" v-bind="attrs" v-on="on" icon>
+                            <v-btn :disabled="selectionActive" @click="notes" v-bind="attrs" v-on="on" icon>
                                 <v-icon>mdi-refresh</v-icon>
                             </v-btn>
                         </template>
@@ -751,22 +751,16 @@
 
             <v-slide-x-reverse-transition>
                 <div class="floating" v-show="selectionActive == true">
-                    <!-- <v-btn
-                        small
-                        fab
-                        class="mx-2"
-                    >
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn> -->
+                
                     <v-tooltip top>
                         <template v-slot:activator="{ on }">
-                            <v-btn class="mx-1" color="grey lighten-2" fab small dark v-on="on"><v-icon color="black">mdi-check</v-icon></v-btn>
+                            <v-btn @click="selectAll" class="mx-1" color="grey lighten-3" fab small dark v-on="on"><v-icon color="black">mdi-check</v-icon></v-btn>
                         </template>
                         <span>Select All</span>
                     </v-tooltip>
                     <v-tooltip top>
                         <template v-slot:activator="{ on }">
-                            <v-btn class="mx-1" color="grey lighten-2" fab small dark v-on="on"><v-icon color="black">mdi-close</v-icon></v-btn>
+                            <v-btn @click="deselectAll" class="mx-1" color="grey lighten-3" fab small dark v-on="on"><v-icon color="black">mdi-close</v-icon></v-btn>
                         </template>
                         <span>Cancel</span>
                     </v-tooltip>
@@ -859,6 +853,24 @@ export default {
     }),
     
     methods: {
+        deselectAll(){
+            this.ids = []
+            for(let i = 0; i < this.myNotes.length; i++){
+                this.myNotes[i].selected = false
+            }
+
+            console.log(this.ids)
+            this.selectionActive = false
+        },
+        selectAll(){
+            this.ids = []
+            // console.log(this.myNotes.length)
+            for(let i = 0; i < this.myNotes.length; i++){
+                this.myNotes[i].selected = true
+                this.ids.push(this.myNotes[i]._id)
+            }
+            console.log(this.ids)
+        },
         successBulk(){
             this.snackbar = true
             this.msg = "Notes deleted successfully"
