@@ -3,30 +3,31 @@
         <v-card tile outlined>
             <v-toolbar flat>
 
-                <v-slide-y-transition>
-                    <v-app-bar-nav-icon v-show="!selectionActive" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-                </v-slide-y-transition>
+                <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
-                <v-slide-y-transition>
-                    <v-app-bar-nav-icon v-show="!selectionActive" class="ml-4"><v-icon size="40" color="yellow">mdi-google-keep</v-icon></v-app-bar-nav-icon>
-                </v-slide-y-transition>
+               
+                    <v-app-bar-nav-icon class="ml-4"><v-icon size="40" color="yellow">mdi-google-keep</v-icon></v-app-bar-nav-icon>
+                
 
-                <v-slide-y-transition>
-                    <v-toolbar-title v-show="!selectionActive" class="ml-3 mr-5">Google Keep CLONE</v-toolbar-title>
-                </v-slide-y-transition>
+                
+                
+                    <v-toolbar-title class="ml-3 mr-5">Google Keep CLONE</v-toolbar-title>
+                
 
                 <v-spacer></v-spacer>
-                <div v-if="isLoading == false">
+
+                
+                <div v-show="!isLoading">
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn @click="notes" v-bind="attrs" v-on="on" icon>
+                            <v-btn  @click="notes" v-bind="attrs" v-on="on" icon>
                                 <v-icon>mdi-refresh</v-icon>
                             </v-btn>
                         </template>
                         <span>Refresh</span>
                     </v-tooltip>
                 </div>
-                <div v-else class="mx-3">
+                <div v-show="isLoading" class="mx-3">
                     <v-progress-circular
                     :size="20"
                     :width="2"
@@ -34,123 +35,112 @@
                     indeterminate
                     ></v-progress-circular>
                 </div>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn v-bind="attrs" v-on="on" icon v-show="!listView" @click="onClickListToggler(true)">
-                            <v-icon>mdi-view-agenda-outline</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>List View</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn v-bind="attrs" v-on="on" icon v-show="listView" @click="onClickListToggler(false)">
-                            <v-icon>mdi-view-grid-outline</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>Grid View</span>
-                </v-tooltip>
+                
+                
+                
+                    
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn v-bind="attrs" v-on="on" icon v-show="!listView" @click="onClickListToggler(true)">
+                                    <v-icon>mdi-view-agenda-outline</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>List View</span>
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn v-bind="attrs" v-on="on" icon v-show="listView" @click="onClickListToggler(false)">
+                                    <v-icon>mdi-view-grid-outline</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Grid View</span>
+                        </v-tooltip>
 
-                <!-- <v-btn icon @click="gridView = false" v-show="gridView">
-                    <v-icon>mdi-view-agenda-outline</v-icon>
-                </v-btn>
+                        <v-menu
+                            bottom
+                            left
+                            offset-y
+                            :close-on-content-click="closeOnContentClick"
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                icon
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                <v-icon>mdi-cog-outline</v-icon>
+                            </v-btn>
+                            </template>
 
-                <v-btn icon @click="gridView = true" v-show="!gridView">
-                    <v-icon>mdi-view-grid-outline</v-icon>
-                </v-btn> -->
+                            <v-list>
+                            <v-list-item>
+                                    <v-switch
+                                    v-model="darkModeSwitch"
+                                    @click="onClickToggleDarkMode"
+                                    small
+                                    inset
+                                    :label="`Enable dark mode`"
+                                    ></v-switch>
+                            </v-list-item>
+                            <v-list-item class="pointer">
+                                <v-list-item-title>
+                                    <span class="col align-items-center">Edit Profile</span>
+                                </v-list-item-title>
+                            </v-list-item>
+                            <v-list-item class="pointer">
+                                <v-list-item-title>
+                                    <span class="col align-items-center">Help</span>
+                                </v-list-item-title>
+                            </v-list-item>
 
+                            <v-list-item class="pointer">
+                                <v-list-item-title>
+                                    <span class="col align-items-center">Send feedback</span>
+                                </v-list-item-title>
+                            </v-list-item>
+                            </v-list>
+                        </v-menu>
 
-                <v-menu
-                    bottom
-                    left
-                    offset-y
-                    :close-on-content-click="closeOnContentClick"
-                >
-                    <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                        icon
-                        v-bind="attrs"
-                        v-on="on"
-                    >
-                        <v-icon>mdi-cog-outline</v-icon>
-                    </v-btn>
-                    </template>
+                        <v-menu
+                            bottom
+                            left
+                            offset-y
+                            :close-on-content-click="closeOnContentClick"
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                icon
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                <v-icon>mdi-dots-vertical</v-icon>
+                                
+                            </v-btn>
+                            </template>
 
-                    <v-list>
-                    <v-list-item>
-                            <v-switch
-                            v-model="darkModeSwitch"
-                            @click="onClickToggleDarkMode"
-                            small
-                            inset
-                            :label="`Enable dark mode`"
-                            ></v-switch>
-                    </v-list-item>
-                    <v-list-item class="pointer">
-                        <v-list-item-title>
-                            <span class="col align-items-center">Edit Profile</span>
-                        </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item class="pointer">
-                        <v-list-item-title>
-                            <span class="col align-items-center">Help</span>
-                        </v-list-item-title>
-                    </v-list-item>
+                            <v-list>
+                                <v-list-item>
+                                    <div class="py-5 px-5 text-center">
+                                        <v-avatar
+                                        color="primary"
+                                        size="63"
+                                        ><span class="white--text headline">{{userInfo.initials}}</span></v-avatar>
+                                        <h3>{{userInfo.name}}</h3>
+                                        <p class="caption mt-1">
+                                            {{userInfo.email}}
+                                        </p>
+                                    </div>
+                                </v-list-item>
 
-                    <v-list-item class="pointer">
-                        <v-list-item-title>
-                            <span class="col align-items-center">Send feedback</span>
-                        </v-list-item-title>
-                    </v-list-item>
-                    </v-list>
-                </v-menu>
-
-
-                <!-- <v-avatar size="40">
-                    <img
-                        src="https://scontent.fmnl4-2.fna.fbcdn.net/v/t1.0-9/85221965_2668856169818185_7998544657929732096_o.jpg?_nc_cat=105&ccb=2&_nc_sid=09cbfe&_nc_eui2=AeE2aG4AH9FGMjNSuAy72r6jti0gOcBuDYa2LSA5wG4NhvB4hWUk64SfGWBxf395em1R33GJUPFfVceVcUWofsMK&_nc_ohc=35Ux5yVpzaEAX9wV7_I&_nc_ht=scontent.fmnl4-2.fna&oh=3c337a759c9e64941c0d4289b8e1a834&oe=5FD6F7CE"
-                        alt="John"
-                    >
-                </v-avatar> -->
-
-                <v-menu
-                    bottom
-                    left
-                    offset-y
-                    :close-on-content-click="closeOnContentClick"
-                >
-                    <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                        icon
-                        v-bind="attrs"
-                        v-on="on"
-                    >
-                        <v-icon>mdi-dots-vertical</v-icon>
-                        
-                    </v-btn>
-                    </template>
-
-                    <v-list>
-                        <v-list-item>
-                            <div class="py-5 px-5 text-center">
-                                <v-avatar
-                                color="primary"
-                                size="63"
-                                ><span class="white--text headline">{{userInfo.initials}}</span></v-avatar>
-                                <h3>{{userInfo.name}}</h3>
-                                <p class="caption mt-1">
-                                    {{userInfo.email}}
-                                </p>
-                            </div>
-                        </v-list-item>
-
-                        <v-list-item>
-                            <v-list-item-title>
-                                <v-btn text block color="red" @click="logout">Logout</v-btn>
-                            </v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
+                                <v-list-item>
+                                    <v-list-item-title>
+                                        <v-btn text block color="red" @click="logout">Logout</v-btn>
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
+                    
+            
             </v-toolbar>
         </v-card>
         <v-navigation-drawer v-model="drawer" app>
@@ -279,13 +269,13 @@
                     >
                         <div v-for="(note, index) in myNotes" :key="index" class="mt-5">
                             <v-card 
-                            outlined :color="note.color === 'default' ? '' : note.color" :elevation=" note.selected == true ? 10 : 0"
+                            outlined :color="note.color === 'default' ? '' : note.color" :elevation=" note.selected == true ? 8 : 0"
                             
                             >
                                 <v-container>
                                     <div class="float-right">
-                                        <v-icon @click="select(note)" v-if="note.selected == false">mdi-circle-outline</v-icon>
-                                        <v-icon @click="deselect(note)" color="blue darken-1" v-else>mdi-checkbox-marked-circle</v-icon>
+                                        <v-icon @click="select(note)" v-if="note.selected == false" small>mdi-circle-outline</v-icon>
+                                        <v-icon @click="deselect(note)" color="blue darken-1" v-else small>mdi-checkbox-marked-circle</v-icon>
                                     </div>
                                     <div class="py-2"><h5>{{ note.title }}</h5></div>
                                     <p>{{ note.content }}</p>
@@ -302,56 +292,52 @@
                                         </v-chip>
                                     </div>
                                     <div class="d-flex">
-                                        <v-slide-y-reverse-transition>
-                                            <div v-show="!selectionActive">
+                                        
+                                            <div>
                                                 <v-tooltip bottom>
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
+                                                        <v-btn :disabled="selectionActive && note.selected == true" x-small fab icon v-bind="attrs" v-on="on" @click="popAddLabelDialog(index, note)"><v-icon>mdi-tag-outline</v-icon></v-btn>
                                                     </template>
                                                     <span>Add tag</span>
                                                 </v-tooltip>
                                             </div>
-                                        </v-slide-y-reverse-transition>
-                                        <v-slide-y-reverse-transition>
-                                            <div v-show="!selectionActive">
+                                       
+                                            <div>
                                                 <v-tooltip bottom>
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                                        <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="deleteSingleNote(note, index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                                                     </template>
                                                     <span>Delete</span>
                                                 </v-tooltip>
                                             </div>
-                                        </v-slide-y-reverse-transition>
-                                        <v-slide-y-reverse-transition>
-                                            <div v-show="!selectionActive">
+                                        
+                                            <div>
                                                 <v-tooltip bottom>
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
+                                                        <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="btnToggleEditDialog(note)"><v-icon>mdi-pencil-outline</v-icon></v-btn>
                                                     </template>
                                                     <span>Edit</span>
                                                 </v-tooltip>
                                             </div>
-                                        </v-slide-y-reverse-transition>
-                                        <v-slide-y-reverse-transition>
-                                            <div v-show="!selectionActive">
+                                        
+                                            <div>
                                                 <v-tooltip bottom>
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
+                                                        <v-btn :disabled="selectionActive && note.selected == true" v-bind="attrs" v-on="on" fab icon x-small @click="btnArchive(note, index)"><v-icon>mdi-archive-outline</v-icon></v-btn>
                                                     </template>
                                                     <span>Archive</span>
                                                 </v-tooltip>
                                             </div>
-                                        </v-slide-y-reverse-transition>
-                                        <v-slide-y-reverse-transition>
-                                            <div v-show="!selectionActive">
+                                        
+                                            <div>
                                                 <v-tooltip bottom>
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
+                                                        <v-btn :disabled="selectionActive && note.selected == true" @click.stop="btnToggleColorPicker(note, index)" v-bind="attrs" v-on="on" fab icon x-small><v-icon>mdi-palette</v-icon></v-btn>
                                                     </template>
                                                     <span>Color</span>
                                                 </v-tooltip>
                                             </div>
-                                        </v-slide-y-reverse-transition>
+                                        
                                     </div>
                                 </v-container>
                             </v-card>
@@ -765,7 +751,27 @@
 
             <v-slide-x-reverse-transition>
                 <div class="floating" v-show="selectionActive == true">
+                    <!-- <v-btn
+                        small
+                        fab
+                        class="mx-2"
+                    >
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn> -->
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on }">
+                            <v-btn class="mx-1" color="grey lighten-2" fab small dark v-on="on"><v-icon color="black">mdi-check</v-icon></v-btn>
+                        </template>
+                        <span>Select All</span>
+                    </v-tooltip>
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on }">
+                            <v-btn class="mx-1" color="grey lighten-2" fab small dark v-on="on"><v-icon color="black">mdi-close</v-icon></v-btn>
+                        </template>
+                        <span>Cancel</span>
+                    </v-tooltip>
                     <v-btn
+                        class="mx-1"
                         color="red"
                         dark
                         fab
