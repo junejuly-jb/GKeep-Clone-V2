@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         async deleteConf(){
-            await this.$http.post('http://localhost:3000/api/bulkDeleteNote', { noteId: this.ids }, {
+            await this.$http.post('api/bulkDeleteNote', { noteId: this.ids }, {
                 headers: {
                     Authorization: 'Bearer ' + this.$auth.getToken()
                 }

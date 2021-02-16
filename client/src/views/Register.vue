@@ -93,7 +93,7 @@ export default {
                 this.err_msg = 'Password mismatch'
             }
             else{
-                await this.$http.post('http://localhost:3000/api/register', this.user)
+                await this.$http.post('api/register', this.user)
                 .then( res => {
                     if(res.body.success == false){
                         this.snackbar = true

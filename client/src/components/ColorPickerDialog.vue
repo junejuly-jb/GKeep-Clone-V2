@@ -123,7 +123,7 @@ export default {
     methods: {
         async btnSetColor(){
           // console.log(this.color)
-          await this.$http.post('http://localhost:3000/api/update-color/' + this.note_colorID,
+          await this.$http.post('api/update-color/' + this.note_colorID,
             { color: this.color }, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then(() => {
                 this.$emit('success', this.color)

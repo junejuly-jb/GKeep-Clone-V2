@@ -63,7 +63,7 @@ export default {
     methods: {
         async btnArchive(note, index){
 
-            await this.$http.post('http://localhost:3000/api/setUnsetArchiveStatus/' + note._id,
+            await this.$http.post('api/setUnsetArchiveStatus/' + note._id,
             { status: note.archive },
             { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
             .then( () => {
