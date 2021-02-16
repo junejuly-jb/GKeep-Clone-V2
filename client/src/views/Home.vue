@@ -241,6 +241,7 @@
                                     v-model="newNote.tags"
                                     :items="c_tag"
                                     chips
+                                    clearable
                                     label="Add label"
                                     multiple
                                     solo
@@ -897,7 +898,6 @@ export default {
             
         },
         successBulk(){
-            // this.filteredNotes = []
             this.snackbar = true
             this.myNotes = this.myNotes.filter( note => !this.ids.includes(note._id))
             if(this.filteredNotes.length != 0){
