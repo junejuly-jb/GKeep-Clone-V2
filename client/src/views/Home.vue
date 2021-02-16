@@ -960,7 +960,7 @@ export default {
         async btnArchive(note, index){
             console.log(note, index)
 
-            await this.$http.post('http://localhost:3000/api/setUnsetArchiveStatus/' + note._id,
+            await this.$http.post('api/setUnsetArchiveStatus/' + note._id,
             { status: note.archive },
             { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
             .then( () => {
@@ -994,7 +994,7 @@ export default {
          async deleteSingleTag(tag, i, note){
             console.log(tag)
             // note.tags.splice(i, 1)
-            await this.$http.post('http://localhost:3000/api/remove-tag/' + note._id,
+            await this.$http.post('api/remove-tag/' + note._id,
             { tag: tag }, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then((res) => {
                 this.msg = res.body.message
@@ -1013,7 +1013,7 @@ export default {
             .finally( () => note.tags.splice(i, 1))
         },
         async btnUpdateExistingTag(){
-            await this.$http.post('http://localhost:3000/api/editNoteWithExistingLabel', { id: this.selected_noteId, tags: this.selectedLabel},
+            await this.$http.post('api/editNoteWithExistingLabel', { id: this.selected_noteId, tags: this.selectedLabel},
              { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
                 .then( (res) => {
                     this.snackbar = true,
@@ -1042,7 +1042,7 @@ export default {
         },
         async notes(){
             this.isLoading = true
-            await this.$http.get('http://localhost:3000/api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            await this.$http.get('api/myNotes', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( (response) => {
                 this.myNotes = response.body.filter( note => {
                     return note.archive != true
@@ -1069,7 +1069,7 @@ export default {
         },
 
         async user(){
-            await this.$http.get('http://localhost:3000/api/userDetails', {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            await this.$http.get('api/userDetails', {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( res => {
                 this.userInfo = res.body[0]
                 this.labels = res.body[0].customTags
@@ -1083,7 +1083,7 @@ export default {
 
         async btnDeleteLabel(label, i){
             console.log(label, i)
-            await this.$http.post('http://localhost:3000/api/deleteLabel', { tag: label }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            await this.$http.post('api/deleteLabel', { tag: label }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( () => {
                 this.msg = "tag deleted"
                 this.snackbar = true
@@ -1115,7 +1115,7 @@ export default {
                 this.msg = 'updated'
             }
             else{
-                await this.$http.post('http://localhost:3000/api/update-tag', { oldTag: this.oldLabelValue, tag: this.editLabelValue }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+                await this.$http.post('api/update-tag', { oldTag: this.oldLabelValue, tag: this.editLabelValue }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
                 .then( res => {
                     this.snackbar = true
                     this.msg = res.body.message
@@ -1133,7 +1133,7 @@ export default {
         },
 
         async onAddLabelClick(){
-            await this.$http.post('http://localhost:3000/api/addCustomTag', { tag: this.addLabel }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            await this.$http.post('api/addCustomTag', { tag: this.addLabel }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( response => {
                 this.labels.push(response.body.tag)
             })
@@ -1145,7 +1145,7 @@ export default {
         async onClickToggleDarkMode(){
             this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
 
-            await this.$http.post('http://localhost:3000/api/darkModeToggler', { val: this.darkModeSwitch }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            await this.$http.post('api/darkModeToggler', { val: this.darkModeSwitch }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( res => {
                 localStorage.removeItem('user-options')
                 localStorage.setItem('user-options', JSON.stringify(res.body.option))
@@ -1187,7 +1187,7 @@ export default {
 
 
         async btnConfirmSingleDelete(){
-            await this.$http.post('http://localhost:3000/api/deleteNote', { note_id: this.delSelectedNoteId },
+            await this.$http.post('api/deleteNote', { note_id: this.delSelectedNoteId },
             {
                 headers:{
                     Authorization: 'Bearer ' + this.$auth.getToken()
@@ -1212,7 +1212,7 @@ export default {
 
 
         async btnAddNote(){
-            await this.$http.post('http://localhost:3000/api/createNote', this.newNote,
+            await this.$http.post('api/createNote', this.newNote,
             {
                 headers: {
                     Authorization: 'Bearer ' + this.$auth.getToken()
@@ -1246,7 +1246,7 @@ export default {
             this.listView = val
             console.log(val)
 
-            await this.$http.post('http://localhost:3000/api/listToggler', { val: val }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+            await this.$http.post('api/listToggler', { val: val }, {headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
             .then( res => {
                 localStorage.removeItem('user-options')
                 localStorage.setItem('user-options', JSON.stringify(res.body.option))
