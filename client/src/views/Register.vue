@@ -102,12 +102,12 @@ export default {
                     else{   
                         this.snackbar = true
                         this.err_msg = res.body.message
+                        setTimeout(() => { this.$router.push('/login') }, 2000)
                     }
                 })
                 .catch( err => {
                     console.log(err)
                 })
-                .finally( () => setTimeout (() => { this.$router.push('/login') }, 2000))
             }
         }
     }
