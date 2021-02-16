@@ -76,7 +76,7 @@ export default {
     }),
     methods: {
         async login(){
-            await this.$http.post('http://localhost:3000/api/login', this.user)
+            await this.$http.post('api/login', this.user)
             .then( response => {
                 if(response.body.success == false){
                     this.snackbar = true
