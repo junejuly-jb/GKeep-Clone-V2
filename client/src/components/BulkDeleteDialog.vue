@@ -16,7 +16,7 @@
             text
             @click="dialog = false"
           >
-            Disagree
+            Revert
           </v-btn>
           <v-btn
             color="red darken-1"
